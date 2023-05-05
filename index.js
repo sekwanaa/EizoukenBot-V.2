@@ -23,6 +23,8 @@ const client = new Client({
   ],
 });
 
+// start Scheduled message
+
 const schedule = require("node-schedule")
 const scheduleMessageCommand = require("./Commands/Admins/scheduledMessage")
 
@@ -30,9 +32,10 @@ let scheduledAnnouncement = new schedule.RecurrenceRule();
 scheduledAnnouncement.date = [1, 28];
 scheduledAnnouncement.hour = 8;
 scheduledAnnouncement.minute = 0;
-// scheduledAnnouncement.second = [0, 30];
 
 const job = schedule.scheduleJob(scheduledAnnouncement, function(){scheduleMessageCommand.scheduledMessage(client)});
+
+// end scheduled message
 
 client.commands = new Collection()
 
