@@ -3,7 +3,6 @@ require('dotenv').config();
 const { BOT_TOKEN } = process.env;
 
 const { Client, GatewayIntentBits, User, Message, GuildMember, ThreadMember } = require(`discord.js`);
-const schedule = require("node-schedule");
 
 const prefix = ".";
 
