@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "discord.js": "^14.10.2",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "mongodb": "^5.4.0",
+    "node-schedule": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
