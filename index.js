@@ -26,5 +26,5 @@ const client = new Client({
 const { loadEvents } = require("./Handlers/eventHandler");
 
 client.login(BOT_TOKEN).then(() => {
-    loadEvents(client, prefix);
+    loadEvents(client);
 });
