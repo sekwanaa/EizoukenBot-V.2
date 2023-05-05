@@ -26,7 +26,7 @@ const client = new Client({
 // start Scheduled message
 
 const schedule = require("node-schedule")
-const scheduleMessageCommand = require("./Commands/Admins/scheduledMessage")
+const scheduleMessageCommand = require("./tools/Admins/scheduledMessage")
 
 let scheduledAnnouncement = new schedule.RecurrenceRule();
 scheduledAnnouncement.date = [1, 28];
