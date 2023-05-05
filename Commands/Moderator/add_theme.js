@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, CommandInteraction, PermissionFlagsBits } = require("discord.js");
 const themesData = require("../../data/themesData")
 
-
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("add_theme")
