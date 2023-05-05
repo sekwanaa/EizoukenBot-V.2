@@ -22,7 +22,7 @@ let exportedMethods = {
 
         return message;
     },
-    async addThemeData(msg, month, year, theme) {
+    async addThemeData(month, year, theme) {
 
         const themesCollection = await themes();
         const currentThemes = await themesCollection.findOne({year: year, month: month});
@@ -30,12 +30,12 @@ let exportedMethods = {
             try {
                 await themesCollection.findOneAndUpdate({year: year, month: month},{$set: {theme: theme}})
                 if (currentThemes.theme == "") {
-                    msg.channel.send(`You have updated the theme for ${month} ${year} to ${theme}`)
+                    return (`You have updated the theme for ${month} ${year} to ${theme}`)
                 } else {
-                    msg.channel.send(`You have updated the theme for ${month} ${year} from ${currentThemes.theme} to ${theme}`)
+                    return (`You have updated the theme for ${month} ${year} from ${currentThemes.theme} to ${theme}`)
                 }
             } catch (error) {
-                return msg.channel.send(error)
+                return error;
             }
         } else {
             try {
@@ -46,24 +46,21 @@ let exportedMethods = {
                 }
         
                 const add_theme = await themesCollection.insertOne(newTheme);
-                msg.channel.send(`Theme: '${theme}' has been added to the month ${month} in ${year}`)
+                return (`Theme: '${theme}' has been added to the month ${month} in ${year}`)
             } catch (error) {
-                return msg.channel.send(error)
+                return error;
             }
         }
 
         return;
     },
-    async removeThemeData(msg, month, year) {
-        if (year != undefined) {
-            year = year;
-        }
+    async removeThemeData(month, year) {
         try {
             const themesCollection = await themes();
             const removeTheme = await themesCollection.findOneAndUpdate({year: year, month: month}, {$set: {theme: ""}});
-            return
+            return (`You have successfully removed the theme from ${month} ${year}`)
         } catch (error) {
-            return msg.channel.send(error)
+            return error;
         }
     },
     async scheduledMessage() {
