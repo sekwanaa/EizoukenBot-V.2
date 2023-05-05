@@ -5,6 +5,6 @@ module.exports = {
     once: true,
     async execute(client) {
         console.log(`${client.user.username} is online`);
-        client.user.setActivity(`| .help |`);
+        client.user.setActivity(`| ?help |`);
     }
 }

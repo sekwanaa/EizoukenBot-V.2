@@ -51,8 +51,6 @@ let exportedMethods = {
                 return error;
             }
         }
-
-        return;
     },
     async removeThemeData(month, year) {
         try {
@@ -63,7 +61,7 @@ let exportedMethods = {
             return error;
         }
     },
-    async scheduledMessage() {
+    async scheduledMessage(channel) {
         let year = new Date().getFullYear();
         const themesCollection = await themes();
         let month = new Date().getMonth();
@@ -80,7 +78,7 @@ let exportedMethods = {
                     message += `\n\t ${month}: ${currentThemes.theme}`
                 }
             }
-            return message;
+            return channel.send(`${message}`);
         } 
         else {
             let message = "Reminder that the current themes for this year are: "
@@ -93,10 +91,8 @@ let exportedMethods = {
                 }
             }
 
-            return message;
+            return channel.send(`${message}`);
         }
-        
-        return;
     },
 }
 
