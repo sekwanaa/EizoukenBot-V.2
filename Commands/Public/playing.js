@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, CommandInteraction, PermissionFlagsBits } = require("discord.js");
-const themesData = require("../../data/themesData")
 
 
 module.exports = {
