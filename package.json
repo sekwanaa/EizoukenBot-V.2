@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "node ./index.js",
+    "devStart": "nodemon ./index.js"
+  },
   "dependencies": {
     "ascii-table": "^0.0.9",
     "discord.js": "^14.10.2",
