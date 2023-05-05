@@ -1,7 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const themes = mongoCollections.themes;
 let months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
-let yearChoice = new Date().getFullYear();
 
 async function capitalize(string) {
     return string[0].toUpperCase() + string.slice(1);
@@ -9,15 +8,12 @@ async function capitalize(string) {
 
 let exportedMethods = {
     async themes(year) {
-        if (year != undefined) {
-            yearChoice = year;
-        }
 
         const themesCollection = await themes();
-        let message = `In the year ${yearChoice}, the themes are/were: `
+        let message = `In the year ${year}, the themes are/were: `
         
         for (i=0;i<months.length;i++) {
-            const currentThemes = await themesCollection.findOne({year: yearChoice, month: months[i]});
+            const currentThemes = await themesCollection.findOne({year: year, month: months[i]});
             if (currentThemes != null) {
                 let month = await capitalize(currentThemes.month);
                 message += `\n\t ${month}: ${currentThemes.theme}`;
@@ -27,19 +23,16 @@ let exportedMethods = {
         return message;
     },
     async addThemeData(msg, month, year, theme) {
-        if (year != undefined) {
-            yearChoice = year;
-        }
 
         const themesCollection = await themes();
-        const currentThemes = await themesCollection.findOne({year: yearChoice, month: month});
+        const currentThemes = await themesCollection.findOne({year: year, month: month});
         if (currentThemes != null) {
             try {
-                await themesCollection.findOneAndUpdate({year: yearChoice, month: month},{$set: {theme: theme}})
+                await themesCollection.findOneAndUpdate({year: year, month: month},{$set: {theme: theme}})
                 if (currentThemes.theme == "") {
-                    msg.channel.send(`You have updated the theme for ${month} ${yearChoice} to ${theme}`)
+                    msg.channel.send(`You have updated the theme for ${month} ${year} to ${theme}`)
                 } else {
-                    msg.channel.send(`You have updated the theme for ${month} ${yearChoice} from ${currentThemes.theme} to ${theme}`)
+                    msg.channel.send(`You have updated the theme for ${month} ${year} from ${currentThemes.theme} to ${theme}`)
                 }
             } catch (error) {
                 return msg.channel.send(error)
@@ -47,13 +40,13 @@ let exportedMethods = {
         } else {
             try {
                 let newTheme = {
-                    year: yearChoice,
+                    year: year,
                     month: month,
                     theme: theme,
                 }
         
                 const add_theme = await themesCollection.insertOne(newTheme);
-                msg.channel.send(`Theme: '${theme}' has been added to the month ${month} in ${yearChoice}`)
+                msg.channel.send(`Theme: '${theme}' has been added to the month ${month} in ${year}`)
             } catch (error) {
                 return msg.channel.send(error)
             }
@@ -63,11 +56,11 @@ let exportedMethods = {
     },
     async removeThemeData(msg, month, year) {
         if (year != undefined) {
-            yearChoice = year;
+            year = year;
         }
         try {
             const themesCollection = await themes();
-            const removeTheme = await themesCollection.findOneAndUpdate({year: yearChoice, month: month}, {$set: {theme: ""}});
+            const removeTheme = await themesCollection.findOneAndUpdate({year: year, month: month}, {$set: {theme: ""}});
             return
         } catch (error) {
             return msg.channel.send(error)
