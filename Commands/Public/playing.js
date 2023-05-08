@@ -20,22 +20,22 @@ module.exports = {
             if(member.presence) {
                 try{
                     if (!member.presence.activities || member.presence.activities.length == 0) {
-                        return
                     } else {
-                        activity = member.presence.activities[0]
-                        if (activity.name === activity) {
+                        let userActivity = member.presence.activities[0]
+                        if (userActivity.name === activity) {
+                            console.log(member.user.username)
                             membersPlaying.push(member.user.username)
                         }
                     }
-                } catch {
-                    return
+                } catch (error) {
+                    
                 }
             } 
             else {
                 return
             }
         })
-        if (membersPlaying.length > 1) {
+        if (membersPlaying.length >= 1) {
             var joinedMembersPlaying = membersPlaying.join(",\n")
             interaction.reply({content: `Users:\n\n${joinedMembersPlaying}\n\n are playing ${activity}`, ephemeral: true})
         } else if (membersPlaying.length === 0) {
