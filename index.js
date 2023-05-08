@@ -23,6 +23,8 @@ const client = new Client({
   ],
 });
 
+module.exports = client;
+
 // start Scheduled message
 
 const schedule = require("node-schedule")
