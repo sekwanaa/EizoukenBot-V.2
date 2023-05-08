@@ -2,6 +2,7 @@ const {
   SlashCommandBuilder,
   CommandInteraction,
   PermissionFlagsBits,
+  EmbedBuilder,
 } = require("discord.js");
 
 module.exports = {
@@ -20,17 +21,30 @@ module.exports = {
         .setName("reason")
         .setDescription("Reason for kick")
         .setRequired(false)
-    ).addAttachmentOption,
+    ),
   async execute(interaction) {
     const { channel, options } = interaction;
     const target = options.getUser("target");
     const reason = options.getString("reason");
 
-    if (!reason) {
-        const guildMembers = interaction.guild.members.cache.fetch()
-        console.log(guildMembers)
-    }
+    const guildMember = await interaction.member.guild.members.fetch(target.id)
 
-    // interaction.reply({content: `This command is not ready yet, nice try!`, ephemeral: true})
+    if (guildMember.roles.highest.position >= interaction.member.roles.highest.position) {
+        const errEmbed = new EmbedBuilder()
+        .setDescription(`You cannot kick ${target.username} because their role is the same or higher than you.`)
+
+        interaction.reply({ embeds: [errEmbed], ephemeral: true })
+    } else {
+        try {
+            await guildMember.kick(reason);
+
+            const embed = new EmbedBuilder()
+            .setDescription(`${target.username} has been successfully kicked for ${reason}`)
+
+            interaction.reply({ embeds: [embed], ephemeral: true })
+        } catch (error) {
+            interaction.reply({ content: `Sorry there was an error completing your kick request`, ephemeral: true })
+        }
+    }
   },
 };
