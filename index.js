@@ -23,6 +23,10 @@ const client = new Client({
   ],
 });
 
+const {DisTube} = new DisTube(client, {
+  
+})
+
 module.exports = client;
 
 // start Scheduled message
