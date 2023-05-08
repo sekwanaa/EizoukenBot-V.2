@@ -35,7 +35,7 @@ module.exports = {
             await guildMember.ban(reason);
 
             const embed = new EmbedBuilder()
-            .setDescription(`${target.username} has been successfully banned for ${reason}`)
+            .setDescription(`${target.username} has been successfully banned for reason: ``${reason}```)
 
             interaction.reply({ embeds: [embed], ephemeral: true })
         } catch (error) {
