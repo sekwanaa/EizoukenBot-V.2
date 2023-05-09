@@ -39,7 +39,7 @@ module.exports = {
             await guildMember.kick(reason);
 
             const embed = new EmbedBuilder()
-            .setDescription(`${target.username} has been successfully kicked for reason: ``${reason}```)
+            .setDescription(`${target.username} has been successfully kicked for reason: ${reason}`)
 
             interaction.reply({ embeds: [embed], ephemeral: true })
         } catch (error) {
