@@ -3,24 +3,11 @@ const client = require("../../index")
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("music")
-    .setDescription("Complete music commands.")
-    .addSubcommand(subcommand => 
-        subcommand.setName("volume")
-        .setDescription("Adjust song volume")
-        .addIntegerOption(option => 
-            option.setName("percent")
-            .setDescription("10 = 10%")
-            .setMinValue(1)
-            .setMaxValue(100)
-            .setRequired(true)
-        )
-    ),
+    .setName("pause")
+    .setDescription("Pause current song"),
 
     async execute(interaction) {
-        const {options, member, guild, channel}=interaction;
-        const volume = options.getInteger("percent");
-        const subcommand = options.getSubcommand();
+        const {member, guild}=interaction;
         const voiceChannel = member.voice.channel;
 
         const embed = new EmbedBuilder();
@@ -35,15 +22,13 @@ module.exports = {
         }
         const queue = await client.distube.getQueue(voiceChannel)
         try {
-            switch (subcommand) {
-                case "volume":
-                    if (!queue) {
-                        embed.setColor("Red").setDescription("Sorry, there is no queue")
-                        return interaction.reply({embeds: [embed], ephemeral: true})
-                    }
-                    client.distube.setVolume(voiceChannel, volume);
-                    return interaction.reply({content: `Volume set to ${volume}%`, ephemeral: true});
+            if (!queue) {
+                embed.setColor("Red").setDescription("Sorry, there is no queue")
+                return interaction.reply({embeds: [embed], ephemeral: true})
             }
+            await queue.pause(voiceChannel);
+            embed.setColor("Orange").setDescription("⏸️ | Paused song")
+            return interaction.reply({embeds: [embed], ephemeral: true})
         } catch (error) {
             console.log(error)
             interaction.reply({content: "sorry something went wrong with your request", ephermeral: true})
