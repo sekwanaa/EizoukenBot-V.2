@@ -2,7 +2,6 @@ module.exports = {
   name: "messageCreate",
   once: false,
   async execute(msg) {
-    console.log(msg);
     if (msg.author.bot) {
       if (
         msg.content.startsWith("In the year") ||
