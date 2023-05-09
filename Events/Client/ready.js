@@ -6,7 +6,7 @@ module.exports = {
     async execute(client) {
         console.log(`${client.user.username} is online`);
         client.user.setPresence({
-            activities: [{ name: '?help', type: ActivityType.Watching }],
+            activities: [{ name: '/help', type: ActivityType.Streaming }],
         });
     }
 }
