@@ -3,7 +3,7 @@ const {
   EmbedBuilder,
   StringSelectMenuBuilder,
   ActionRowBuilder,
-  ComponentType
+  ComponentType,
 } = require("discord.js");
 
 module.exports = {
@@ -75,35 +75,37 @@ module.exports = {
     });
 
     const filter = (i) => i.user.id === interaction.member.id;
-    
-    const collector = interaction.channel.createMessageComponentCollector({
-        filter,
-        interactionType: 3,
-        time: 30000,
-    });   
 
-    collector.on('collect', async (i) => {
-        const [directory] = i.values;
-        const category = categories.find(
-            (x) => x.directory.toLowerCase() === directory
-        );
-        // await i.reply(`${i.user} has selected ${directory}!`);
-        const categoryEmbed = new EmbedBuilder()
-        .setTitle(`${formatString(directory)} commands`)
-        .setDescription(`A list of all commands under the category ${directory}`)
-        .addFields(
-            category.commands.map((cmd) => {
-                return {
-                    name: `\`${cmd.name}\``,
-                    value: cmd.description,
-                    inline: false,
-                };
-            })
-        );
-        i.update({embeds: [categoryEmbed]})
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter,
+      interactionType: 3,
+      time: 30000,
     });
-    collector.on('end', () => 
-        initialMessage.edit({components: components(true)})
-    )
+
+    collector.on("collect", async (i) => {
+      const [directory] = i.values;
+      const category = categories.find(
+        (x) => x.directory.toLowerCase() === directory
+      );
+      // await i.reply(`${i.user} has selected ${directory}!`);
+      const categoryEmbed = new EmbedBuilder()
+        .setTitle(`${formatString(directory)} commands`)
+        .setDescription(
+          `A list of all commands under the category ${directory}`
+        )
+        .addFields(
+          category.commands.map((cmd) => {
+            return {
+              name: `\`${cmd.name}\``,
+              value: cmd.description,
+              inline: false,
+            };
+          })
+        );
+      i.update({ embeds: [categoryEmbed] });
+    });
+    collector.on("end", () =>
+      initialMessage.edit({ components: components(true) })
+    );
   },
 };
