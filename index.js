@@ -1,7 +1,5 @@
 require("dotenv").config();
-
 const { BOT_TOKEN } = process.env;
-
 const {
   Client,
   GatewayIntentBits,
@@ -11,12 +9,12 @@ const {
   ThreadMember,
   Collection,
 } = require(`discord.js`);
-
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
+const schedule = require("node-schedule");
+const scheduleMessageCommand = require("./tools/Admins/scheduledMessage");
 const { loadEvents } = require("./Handlers/eventHandler");
 const { loadCommands } = require("./Handlers/commandHandler");
-
 const prefix = "?";
 
 const client = new Client({
@@ -44,9 +42,6 @@ client.commands = new Collection();
 module.exports = client;
 
 // start Scheduled message
-
-const schedule = require("node-schedule");
-const scheduleMessageCommand = require("./tools/Admins/scheduledMessage");
 
 let scheduledAnnouncement = new schedule.RecurrenceRule();
 scheduledAnnouncement.date = [1, 28];
