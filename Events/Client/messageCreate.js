@@ -6,7 +6,7 @@ module.exports = {
       if (
         msg.content.startsWith("In the year") ||
         msg.content.startsWith("Reminder that the current themes") ||
-        msg.content.startsWith("'🎶 | ")
+        msg.content.startsWith("🎶 | ")
       ) {
         try {
           setTimeout(() => {
