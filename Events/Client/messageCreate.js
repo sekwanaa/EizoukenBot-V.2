@@ -3,11 +3,7 @@ module.exports = {
   once: false,
   async execute(msg) {
     if (msg.author.bot) {
-      if (
-        msg.content.startsWith("In the year") ||
-        msg.content.startsWith("Reminder that the current themes") ||
-        msg.content.startsWith("🎶 | ")
-      ) {
+      if (msg.content.startsWith("🎶 | ")) {
         try {
           setTimeout(() => {
             msg.delete().catch(() => null);
@@ -16,7 +12,8 @@ module.exports = {
           console.log("Couldn't find bot response to delete");
           return;
         }
-      } else if (msg.embeds[0].data.description.startsWith("A suggestion made by:")) {
+      } else if (msg.embeds[0].data) {
+        //if message is an embed
         return;
       } else {
         try {
