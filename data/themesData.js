@@ -1,4 +1,5 @@
 const mongoCollections = require("../config/mongoCollections");
+const { EmbedBuilder } = require("discord.js");
 const themes = mongoCollections.themes;
 let months = [
   "january",
@@ -22,7 +23,7 @@ async function capitalize(string) {
 let exportedMethods = {
   async themes(year) {
     const themesCollection = await themes();
-    let message = `In the year ${year}, the themes are/were: `;
+    let message = ``;
 
     for (i = 0; i < months.length; i++) {
       const currentThemes = await themesCollection.findOne({ year: year, month: months[i] });
@@ -32,7 +33,9 @@ let exportedMethods = {
       }
     }
 
-    return message;
+    const embed = new EmbedBuilder().setTitle(`Themes for ${year}`).setDescription(`${message}`).setColor("Gold")
+
+    return embed;
   },
   async addThemeData(month, year, theme) {
     const themesCollection = await themes();
@@ -82,7 +85,7 @@ let exportedMethods = {
     let day = new Date().getDay();
 
     if (month == 12 && day == 28) {
-      let message = "Reminder that next years themes are: ";
+      let message = ``;
       year = year + 1;
 
       for (i = 0; i < months.length; i++) {
@@ -92,7 +95,8 @@ let exportedMethods = {
           message += `\n\t ${month}: ${currentThemes.theme}`;
         }
       }
-      return channel.send(`${message}`);
+      const embed = new EmbedBuilder().setTitle(`Themes for ${year}`).setDescription(`${message}`).setColor("DarkAqua")
+      return channel.send({embeds: [embed]});
     } else {
       let message = "Reminder that the current themes for this year are: ";
 
@@ -103,8 +107,8 @@ let exportedMethods = {
           message += `\n\t ${month}: ${currentThemes.theme}`;
         }
       }
-
-      return channel.send(`${message}`);
+      const embed = new EmbedBuilder().setDescription(`${message}`).setColor("DarkAqua")
+      return channel.send({embeds: [embed]});
     }
   },
 };

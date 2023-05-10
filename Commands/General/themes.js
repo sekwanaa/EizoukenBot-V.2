@@ -13,12 +13,12 @@ module.exports = {
     const { channel, options } = interaction;
     const year = options.getInteger("year");
     if (year) {
-      const action = await themesData.themes(year);
-      interaction.reply({ content: `${action}` });
+      const message = await themesData.themes(year);
+      interaction.reply({ embeds: [message] });
     } else {
       const year = new Date().getFullYear();
-      const action = await themesData.themes(year);
-      interaction.reply({ content: `${action}` });
+      const message = await themesData.themes(year);
+      interaction.reply({ embeds: [message] });
     }
   },
 };
