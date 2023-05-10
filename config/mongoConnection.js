@@ -1,7 +1,7 @@
 require("dotenv").config();
 const MongoClient = require("mongodb").MongoClient;
 const serverURI = process.env.serverURI;
-const database = process.env.database
+const database = process.env.database;
 
 let _connection = undefined;
 let _db = undefined;

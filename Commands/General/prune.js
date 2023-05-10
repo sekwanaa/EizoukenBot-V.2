@@ -1,60 +1,57 @@
 const { SlashCommandBuilder, CommandInteraction, EmbedBuilder, PermissionFlagsBits, User } = require("discord.js");
 
 module.exports = {
-    data: new SlashCommandBuilder()
+  data: new SlashCommandBuilder()
     .setName("prune")
     .setDescription("Deletes a certain amount of messages in a channel")
-    .addIntegerOption(option => 
-        option
-        .setName("amount")
-        .setDescription("Choose how many messages to delete")
-        .setRequired(false)
+    .addIntegerOption((option) =>
+      option.setName("amount").setDescription("Choose how many messages to delete").setRequired(false)
     ),
 
-    async execute(interaction) {
-        const { channel, options } = interaction;
-        const amount = options.getInteger("amount");
+  async execute(interaction) {
+    const { channel, options } = interaction;
+    const amount = options.getInteger("amount");
 
-        const res = new EmbedBuilder()
-            .setColor(0x5fb041);
+    const res = new EmbedBuilder().setColor(0x5fb041);
 
-        if (amount) {
-            const messages = await channel.messages.fetch({limit: amount+1});
-            let i = 0;
-            const filteredMessages = [];
+    if (amount) {
+      const messages = await channel.messages.fetch({ limit: amount + 1 });
+      let i = 0;
+      const filteredMessages = [];
 
-            (await messages).filter(msg => {
-                if (msg.author.id == interaction.user.id && amount > i) {
-                    filteredMessages.push(msg);
-                    i++;
-                }
-            })
-
-            try {
-                await channel.bulkDelete(filteredMessages).then(messages => {
-                    res.setDescription(`Successfully deleted ${messages.size} of your messages from channel`);
-                    interaction.reply({embeds: [res]})
-                });
-            } catch (error) {
-                interaction.reply({content: "Sorry there was an issue completing your request."})
-            }
+      (await messages).filter((msg) => {
+        if (msg.author.id == interaction.user.id && amount > i) {
+          filteredMessages.push(msg);
+          i++;
         }
-        else {
-            const messages = await channel.messages.fetch({limit: 30});
-            let filteredMessages = [];
-            messages.forEach(message => {
-                if (message.author.id == interaction.user.id) {
-                    filteredMessages.push(message);
-                }
-            })
-            try {
-                await channel.bulkDelete(filteredMessages).then(messages => {
-                    res.setDescription(`Successfully deleted ${messages.size} of your messages within the last 30 messages from the channel`);
-                    interaction.reply({embeds: [res]})
-                });
-            } catch {
-                interaction.reply({content: "Sorry there was an issue completing your request."})
-            }
+      });
+
+      try {
+        await channel.bulkDelete(filteredMessages).then((messages) => {
+          res.setDescription(`Successfully deleted ${messages.size} of your messages from channel`);
+          interaction.reply({ embeds: [res] });
+        });
+      } catch (error) {
+        interaction.reply({ content: "Sorry there was an issue completing your request." });
+      }
+    } else {
+      const messages = await channel.messages.fetch({ limit: 30 });
+      let filteredMessages = [];
+      messages.forEach((message) => {
+        if (message.author.id == interaction.user.id) {
+          filteredMessages.push(message);
         }
-    },
-}
+      });
+      try {
+        await channel.bulkDelete(filteredMessages).then((messages) => {
+          res.setDescription(
+            `Successfully deleted ${messages.size} of your messages within the last 30 messages from the channel`
+          );
+          interaction.reply({ embeds: [res] });
+        });
+      } catch {
+        interaction.reply({ content: "Sorry there was an issue completing your request." });
+      }
+    }
+  },
+};

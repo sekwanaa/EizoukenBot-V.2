@@ -1,46 +1,38 @@
 const { SlashCommandBuilder, CommandInteraction, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
-const themesData = require("../../data/themesData")
+const themesData = require("../../data/themesData");
 
 module.exports = {
-    data: new SlashCommandBuilder()
+  data: new SlashCommandBuilder()
     .setName("ban")
     .setDescription("Allows user to ban a player")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .addUserOption((option) =>
-      option
-        .setName("target")
-        .setDescription("Select who to ban")
-        .setRequired(true)
-    )
-    .addStringOption((option) =>
-      option
-        .setName("reason")
-        .setDescription("Reason for ban")
-        .setRequired(false)
-    ),
+    .addUserOption((option) => option.setName("target").setDescription("Select who to ban").setRequired(true))
+    .addStringOption((option) => option.setName("reason").setDescription("Reason for ban").setRequired(false)),
   async execute(interaction) {
     const { channel, options } = interaction;
     const target = options.getUser("target");
     const reason = options.getString("reason");
 
-    const guildMember = await interaction.member.guild.members.fetch(target.id)
+    const guildMember = await interaction.member.guild.members.fetch(target.id);
 
     if (guildMember.roles.highest.position >= interaction.member.roles.highest.position) {
-        const errEmbed = new EmbedBuilder()
-        .setDescription(`You cannot ban ${target.username} because their role is the same or higher than you.`)
+      const errEmbed = new EmbedBuilder().setDescription(
+        `You cannot ban ${target.username} because their role is the same or higher than you.`
+      );
 
-        interaction.reply({ embeds: [errEmbed], ephemeral: true })
+      interaction.reply({ embeds: [errEmbed], ephemeral: true });
     } else {
-        try {
-            await guildMember.ban(reason);
+      try {
+        await guildMember.ban(reason);
 
-            const embed = new EmbedBuilder()
-            .setDescription(`${target.username} has been successfully banned for reason: ``${reason}```)
+        const embed = new EmbedBuilder().setDescription(
+          `${target.username} has been successfully banned for reason: ``${reason}```
+        );
 
-            interaction.reply({ embeds: [embed], ephemeral: true })
-        } catch (error) {
-            interaction.reply({ content: `Sorry there was an error completing your ban request`, ephemeral: true })
-        }
+        interaction.reply({ embeds: [embed], ephemeral: true });
+      } catch (error) {
+        interaction.reply({ content: `Sorry there was an error completing your ban request`, ephemeral: true });
+      }
     }
   },
 };

@@ -7,13 +7,11 @@ function loadCommands(client) {
   const table = new ascii().setHeading("Commands", "Status");
   const commandFolder = fs.readdirSync("./Commands");
   for (const folder of commandFolder) {
-    const commandFiles = fs
-      .readdirSync(`./Commands/${folder}`)
-      .filter((file) => file.endsWith(".js"));
+    const commandFiles = fs.readdirSync(`./Commands/${folder}`).filter((file) => file.endsWith(".js"));
 
     for (const file of commandFiles) {
       if (file == "playing.js") {
-        continue
+        continue;
       }
       const commandFile = require(`../Commands/${folder}/${file}`);
 

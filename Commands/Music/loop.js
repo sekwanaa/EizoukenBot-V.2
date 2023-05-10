@@ -9,11 +9,7 @@ module.exports = {
       options
         .setName("options")
         .setDescription("Loop options: off, song, queue")
-        .addChoices(
-          { name: "off", value: "off" },
-          { name: "song", value: "song" },
-          { name: "queue", value: "queue" }
-        )
+        .addChoices({ name: "off", value: "off" }, { name: "song", value: "song" }, { name: "queue", value: "queue" })
         .setRequired(true)
     ),
 
@@ -25,17 +21,11 @@ module.exports = {
     const embed = new EmbedBuilder();
 
     if (!voiceChannel) {
-      embed
-        .setColor("Red")
-        .setDescription(
-          "You need to be in a voice channel to execute music commands."
-        );
+      embed.setColor("Red").setDescription("You need to be in a voice channel to execute music commands.");
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }
     if (!member.voice.channel == guild.members.me.voice.channelId) {
-      embed
-        .setColor("Red")
-        .setDescription("I can only be used in one channel at a time.");
+      embed.setColor("Red").setDescription("I can only be used in one channel at a time.");
       return interaction.reply({ embeds: [embed] });
     }
     const queue = await client.distube.getQueue(voiceChannel);
@@ -61,9 +51,7 @@ module.exports = {
       await queue.setRepeatMode(mode);
 
       mode = mode ? (mode === 2 ? "Repeat Queue" : "Repeat Song") : "Off";
-      embed
-        .setColor("Orange")
-        .setDescription(`🔁 | Repeat mode to \`${mode}\`.`);
+      embed.setColor("Orange").setDescription(`🔁 | Repeat mode to \`${mode}\`.`);
       return interaction.reply({ embeds: [embed], ephemeral: true });
     } catch (error) {
       console.log(error);

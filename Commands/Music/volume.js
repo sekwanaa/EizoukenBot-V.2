@@ -6,12 +6,7 @@ module.exports = {
     .setName("volume")
     .setDescription("Adjust song volume")
     .addIntegerOption((option) =>
-      option
-        .setName("percent")
-        .setDescription("10 = 10%")
-        .setMinValue(1)
-        .setMaxValue(100)
-        .setRequired(true)
+      option.setName("percent").setDescription("10 = 10%").setMinValue(1).setMaxValue(100).setRequired(true)
     ),
 
   async execute(interaction) {
@@ -22,17 +17,11 @@ module.exports = {
     const embed = new EmbedBuilder();
 
     if (!voiceChannel) {
-      embed
-        .setColor("Red")
-        .setDescription(
-          "You need to be in a voice channel to execute music commands."
-        );
+      embed.setColor("Red").setDescription("You need to be in a voice channel to execute music commands.");
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }
     if (!member.voice.channel == guild.members.me.voice.channelId) {
-      embed
-        .setColor("Red")
-        .setDescription("I can only be used in one channel at a time.");
+      embed.setColor("Red").setDescription("I can only be used in one channel at a time.");
       return interaction.reply({ embeds: [embed], ephemeral: true });
     }
     const queue = await client.distube.getQueue(voiceChannel);

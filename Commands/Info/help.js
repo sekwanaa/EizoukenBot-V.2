@@ -7,9 +7,7 @@ const {
 } = require("discord.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("help")
-    .setDescription("Collection of all commands"),
+  data: new SlashCommandBuilder().setName("help").setDescription("Collection of all commands"),
 
   async execute(interaction) {
     const { channel, options } = interaction;
@@ -20,12 +18,9 @@ module.exports = {
       music: "🎵",
     };
 
-    const directories = [
-      ...new Set(interaction.client.commands.map((cmd) => cmd.folder)),
-    ];
+    const directories = [...new Set(interaction.client.commands.map((cmd) => cmd.folder))];
 
-    const formatString = (str) =>
-      `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
+    const formatString = (str) => `${str[0].toUpperCase()}${str.slice(1).toLowerCase()}`;
 
     const categories = directories.map((dir) => {
       const getCommands = interaction.client.commands
@@ -33,9 +28,7 @@ module.exports = {
         .map((cmd) => {
           return {
             name: cmd.data.name,
-            description:
-              cmd.data.description ||
-              "There is no description for this command.",
+            description: cmd.data.description || "There is no description for this command.",
           };
         });
 
@@ -45,9 +38,7 @@ module.exports = {
       };
     });
 
-    const embed = new EmbedBuilder().setDescription(
-      "Please choose a category from below."
-    );
+    const embed = new EmbedBuilder().setDescription("Please choose a category from below.");
 
     const components = (state) => [
       new ActionRowBuilder().addComponents(
@@ -84,15 +75,11 @@ module.exports = {
 
     collector.on("collect", async (i) => {
       const [directory] = i.values;
-      const category = categories.find(
-        (x) => x.directory.toLowerCase() === directory
-      );
+      const category = categories.find((x) => x.directory.toLowerCase() === directory);
       // await i.reply(`${i.user} has selected ${directory}!`);
       const categoryEmbed = new EmbedBuilder()
         .setTitle(`${formatString(directory)} commands`)
-        .setDescription(
-          `A list of all commands under the category ${directory}`
-        )
+        .setDescription(`A list of all commands under the category ${directory}`)
         .addFields(
           category.commands.map((cmd) => {
             return {
@@ -104,8 +91,6 @@ module.exports = {
         );
       i.update({ embeds: [categoryEmbed] });
     });
-    collector.on("end", () =>
-      initialMessage.edit({ components: components(true) })
-    );
+    collector.on("end", () => initialMessage.edit({ components: components(true) }));
   },
 };

@@ -16,9 +16,7 @@ module.exports = {
           console.log("Couldn't find bot response to delete");
           return;
         }
-      } else if (
-        msg.embeds[0].data.description.startsWith("A suggestion made by:")
-      ) {
+      } else if (msg.embeds[0].data.description.startsWith("A suggestion made by:")) {
         return;
       } else {
         try {

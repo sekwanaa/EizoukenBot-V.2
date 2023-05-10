@@ -1,14 +1,6 @@
 require("dotenv").config();
 const { BOT_TOKEN } = process.env;
-const {
-  Client,
-  GatewayIntentBits,
-  User,
-  Message,
-  GuildMember,
-  ThreadMember,
-  Collection,
-} = require(`discord.js`);
+const { Client, GatewayIntentBits, User, Message, GuildMember, ThreadMember, Collection } = require(`discord.js`);
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const schedule = require("node-schedule");
