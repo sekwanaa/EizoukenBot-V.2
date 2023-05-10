@@ -7,23 +7,13 @@ module.exports = {
         try {
           setTimeout(() => {
             msg.delete().catch(() => null);
-          }, 360000);
+          }, 3_600_000);
         } catch {
           console.log("Couldn't find bot response to delete");
           return;
         }
-      } else if (msg.embeds[0].data) {
-        //if message is an embed
-        return;
       } else {
-        try {
-          setTimeout(() => {
-            msg.delete().catch(() => null);
-          }, 60000);
-        } catch {
-          console.log("Couldn't find bot response to delete");
-          return;
-        }
+        return;
       }
     } else {
       return;
