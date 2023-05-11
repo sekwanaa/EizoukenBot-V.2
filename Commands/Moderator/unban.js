@@ -6,21 +6,26 @@ module.exports = {
     .setName("unban")
     .setDescription("Allows user to unban a player")
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
-    .addUserOption((option) =>
-      option.setName("userid").setDescription("Input userId of user to unban").setRequired(true)
-    ),
+    .addUserOption((option) => option.setName("target").setDescription("Choose who to unban").setRequired(true)),
   async execute(interaction) {
-    const { options } = interaction;
-    const userId = options.getUser("userid");
+    const { guild, options } = interaction;
+    const user = options.getUser("target");
+    const bannedUsers = await guild.bans.fetch();
+    const bannedUsersId = bannedUsers.map((users) => users.user.id);
 
-    try {
-      await interaction.guild.members.unban(userId);
+    if (bannedUsersId.includes(user.id)) {
+      try {
+        await interaction.guild.members.unban(user);
 
-      const embed = new EmbedBuilder().setDescription(`${userId} has been successfully unbanned.`).setTimestamp();
+        const embed = new EmbedBuilder().setDescription(`${user} has been successfully unbanned.`).setTimestamp();
 
-      interaction.reply({ embeds: [embed], ephemeral: true });
-    } catch (error) {
-      interaction.reply({ content: `Sorry there was an error completing your unban request`, ephemeral: true });
+        interaction.reply({ embeds: [embed], ephemeral: true });
+      } catch (error) {
+        interaction.reply({ content: `Sorry there was an error completing your unban request`, ephemeral: true });
+      }
+    } else {
+      const errEmbed = new EmbedBuilder().setDescription(`${user} is not currently banned.`).setColor("Red");
+      interaction.reply({ embeds: [errEmbed], ephemeral: true });
     }
   },
 };
