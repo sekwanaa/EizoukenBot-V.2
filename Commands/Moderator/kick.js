@@ -8,7 +8,7 @@ module.exports = {
     .addUserOption((option) => option.setName("target").setDescription("Select who to kick").setRequired(true))
     .addStringOption((option) => option.setName("reason").setDescription("Reason for kick").setRequired(false)),
   async execute(interaction) {
-    const { channel, options } = interaction;
+    const { options } = interaction;
     const target = options.getUser("target");
     const reason = options.getString("reason");
 
@@ -22,7 +22,7 @@ module.exports = {
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     } else {
       try {
-        await guildMember.kick(reason);
+        await guildMember.kick({reason});
 
         const embed = new EmbedBuilder().setDescription(
           `${target.username} has been successfully kicked for reason: ${reason}`

@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require("discord.js");
-const themesData = require("../../data/themesData");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -9,7 +8,7 @@ module.exports = {
     .addUserOption((option) => option.setName("target").setDescription("Select who to ban").setRequired(true))
     .addStringOption((option) => option.setName("reason").setDescription("Reason for ban").setRequired(false)),
   async execute(interaction) {
-    const { channel, options } = interaction;
+    const { options } = interaction;
     const target = options.getUser("target");
     const reason = options.getString("reason");
 
@@ -23,14 +22,15 @@ module.exports = {
       interaction.reply({ embeds: [errEmbed], ephemeral: true });
     } else {
       try {
-        await guildMember.ban(reason);
+        await guildMember.ban({reason});
 
         const embed = new EmbedBuilder().setDescription(
-          `${target.username} has been successfully banned for reason: ``${reason}```
+          `${target.username} has been successfully banned for reason: ${reason}`
         );
 
         interaction.reply({ embeds: [embed], ephemeral: true });
       } catch (error) {
+        console.log(error);
         interaction.reply({ content: `Sorry there was an error completing your ban request`, ephemeral: true });
       }
     }
