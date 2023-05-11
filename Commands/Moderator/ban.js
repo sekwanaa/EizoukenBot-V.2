@@ -26,7 +26,7 @@ module.exports = {
 
         const embed = new EmbedBuilder().setDescription(
           `${target.username} has been successfully banned for reason: ${reason}`
-        );
+        ).setTimestamp();
 
         interaction.reply({ embeds: [embed], ephemeral: true });
       } catch (error) {
