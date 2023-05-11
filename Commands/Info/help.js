@@ -16,6 +16,7 @@ module.exports = {
       moderator: "🛠️",
       general: "👪",
       music: "🎵",
+      misc: "〽️",
     };
 
     const directories = [...new Set(interaction.client.commands.map((cmd) => cmd.folder))];
