@@ -6,7 +6,6 @@ module.exports = {
   async execute(interaction) {
     const { channel } = interaction;
     const previousUser = await channel.messages.fetch({ limit: 1 }).then((msg) => msg.map((user) => user.author));
-    console.log(previousUser);
     interaction.reply({ content: `${previousUser} ur mom` });
   },
 };
