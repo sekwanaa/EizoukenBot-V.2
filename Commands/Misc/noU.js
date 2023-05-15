@@ -12,7 +12,7 @@ module.exports = {
       const previousUser = urMomMessage.interaction.user
       interaction.reply({ content: `${previousUser} no u` });
     } catch {
-      interaction.reply({content: `There was no one here who used the command /urmom recently`})
+      interaction.reply({content: `There was no one here who used the command /urmom recently`, ephermeral: true})
     }
   },
 };
