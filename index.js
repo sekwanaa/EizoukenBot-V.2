@@ -30,6 +30,7 @@ client.distube = new DisTube(client, {
 });
 
 client.commands = new Collection();
+client.cooldowns = new Collection();
 
 module.exports = client;
 
