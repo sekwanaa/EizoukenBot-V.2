@@ -21,7 +21,7 @@
 		"body": [
 			"const { SlashCommandBuilder } = require('discord.js');\n",
 			"module.exports = {\n",
-			"\tdata: new SlashCommandBuilder()\n\t$0,\n",
+			"\tdata: new SlashCommandBuilder()\n\t.setName('$0'),\n",
 			"\tasync execute(interaction) {\n\t\n\t\t},",
 			"};"
 
