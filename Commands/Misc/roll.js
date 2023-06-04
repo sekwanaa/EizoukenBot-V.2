@@ -3,9 +3,9 @@ const { SlashCommandBuilder } = require("discord.js");
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("roll")
-    .setDescription("Roll a dice. Default number of sides is 6.")
+    .setDescription("Roll a dice")
     .addIntegerOption((option) =>
-      option.setName("sides").setDescription("The number of sides").setRequired(false)
+      option.setName("sides").setDescription("The number of sides, default is 6").setRequired(false)
     ),
 
   async execute(interaction) {
