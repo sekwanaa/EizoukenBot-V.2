@@ -12,6 +12,7 @@ module.exports = {
   async execute(interaction) {
     const { channel, options } = interaction;
     const emojis = {
+      fun: "🎉",
       info: "📚",
       moderator: "🛠️",
       general: "👪",
