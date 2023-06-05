@@ -1,53 +1,76 @@
-require("dotenv").config();
-const { BOT_TOKEN } = process.env;
-const { Client, GatewayIntentBits, User, Message, GuildMember, ThreadMember, Collection } = require(`discord.js`);
-const { DisTube } = require("distube");
-const { SpotifyPlugin } = require("@distube/spotify");
-const schedule = require("node-schedule");
-const scheduleMessageCommand = require("./tools/Admins/scheduledMessage");
-const { loadEvents } = require("./Handlers/eventHandler");
-const { loadCommands } = require("./Handlers/commandHandler");
-const prefix = "?";
+require('dotenv').config()
+const { BOT_TOKEN } = process.env
+const {
+	Client,
+	GatewayIntentBits,
+	User,
+	Message,
+	GuildMember,
+	ThreadMember,
+	Collection,
+} = require(`discord.js`)
+const { DisTube } = require('distube')
+const { SpotifyPlugin } = require('@distube/spotify')
+const schedule = require('node-schedule')
+const scheduleMessageCommand = require('./tools/Automation/scheduledMessage')
+const autoProfilePicChangeCommand = require('./tools/Automation/autoProfilePicChange')
+const { loadEvents } = require('./Handlers/eventHandler')
+const { loadCommands } = require('./Handlers/commandHandler')
+const prefix = '?'
 
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMessageReactions,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildVoiceStates,
-  ],
-  partials: [User, Message, GuildMember, ThreadMember],
-});
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildPresences,
+		GatewayIntentBits.GuildVoiceStates,
+	],
+	partials: [User, Message, GuildMember, ThreadMember],
+})
 
 client.distube = new DisTube(client, {
-  emitNewSongOnly: true,
-  leaveOnFinish: true,
-  emitAddSongWhenCreatingQueue: false,
-  plugins: [new SpotifyPlugin()],
-});
+	emitNewSongOnly: true,
+	leaveOnFinish: true,
+	emitAddSongWhenCreatingQueue: false,
+	plugins: [new SpotifyPlugin()],
+})
 
-client.commands = new Collection();
-client.cooldowns = new Collection();
+client.commands = new Collection()
+client.cooldowns = new Collection()
 
-module.exports = client;
+module.exports = client
 
 // start Scheduled message
 
-let scheduledAnnouncement = new schedule.RecurrenceRule();
-scheduledAnnouncement.date = [1, 28];
-scheduledAnnouncement.hour = 8;
-scheduledAnnouncement.minute = 0;
+let scheduledAnnouncement = new schedule.RecurrenceRule()
+scheduledAnnouncement.date = [1, 28]
+scheduledAnnouncement.hour = 8
+scheduledAnnouncement.minute = 0
 
 const job = schedule.scheduleJob(scheduledAnnouncement, function () {
-  scheduleMessageCommand.scheduledMessage(client);
-});
+	scheduleMessageCommand.scheduledMessage(client)
+})
 
 // end scheduled message
 
+// start auto profile pic change
+
+let autoProfilePicChange = new schedule.RecurrenceRule()
+autoProfilePicChange.date = 1
+autoProfilePicChange.hour = 8
+autoProfilePicChange.minute = 0
+// autoProfilePicChange.second = [0]
+
+const job2 = schedule.scheduleJob(autoProfilePicChange, function () {
+	autoProfilePicChangeCommand.autoProfilePicChange(client)
+})
+
+// end auto profile pic change
+
 client.login(BOT_TOKEN).then(() => {
-  loadEvents(client);
-  loadCommands(client);
-});
+	loadEvents(client)
+	loadCommands(client)
+})
