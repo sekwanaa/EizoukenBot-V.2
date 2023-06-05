@@ -3,15 +3,14 @@ const themesData = require('../../data/themesData')
 const { googleAPIKey, customSearchEngineID } = process.env
 
 let exportedModules = {
-	async autoProfilePicChange(client) {
+	async autoProfilePicChange(interaction, client) {
 		const year = new Date().getFullYear()
 		const month = new Intl.DateTimeFormat('en-US', { month: 'long' })
 			.format(new Date())
 			.toLowerCase()
-		const imageChoiceNumebr = Math.floor(Math.random() * 10) + Math.floor(Math.random() * 10)
-		console.log(year, month)
+		const imageChoiceNumber = Math.floor(Math.random() * 10 + Math.round(Math.random() * 3))
 		let searchQuery = await themesData.getThemes(year, month)
-		console.log(searchQuery)
+		console.log(searchQuery, imageChoiceNumber)
 
 		import('node-fetch')
 			.then(fetch => {
@@ -25,15 +24,30 @@ let exportedModules = {
 					.then(response => response.json())
 					.then(data => {
 						if (data.items && data.items.length > 0) {
-							const imageURL = data.items[imageChoiceNumebr].link
+							try {
+								var imageURL = data.items[imageChoiceNumber].link
+							} catch (error) {
+								setTimeout(() => {
+									this.autoProfilePicChange(interaction, client)
+									return
+								}, 5000)
+							}
 							console.log('Fetched image URL:', imageURL)
 							// Additional code to update the bot's profile picture
 							client.user
 								.setAvatar(imageURL)
-								.then(() => console.log('Bot profile picture updated successfully!'))
+								.then(
+									interaction.reply({
+										content: 'Bot profile picture updated successfully!',
+										ephemeral: true,
+									})
+								)
 								.catch(console.error)
 						} else {
-							console.log('No images found for the search query.')
+							return interaction.reply({
+								content: 'No images found for the search query.',
+								ephemeral: true,
+							})
 						}
 					})
 					.catch(console.error)
