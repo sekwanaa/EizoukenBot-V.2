@@ -16,7 +16,7 @@ module.exports = {
 	async execute(interaction, client) {
 		const query = interaction.options.getString('query')
 		let cooldown = client.cooldowns
-		const cooldownTimer = 30000
+		const cooldownTimer = 10000
 		if (cooldown.has(interaction.user.id)) {
 			const cooldownExpirationTime = cooldown.get(interaction.user.id) + cooldownTimer
 			const timeLeft = cooldownExpirationTime - Date.now()
