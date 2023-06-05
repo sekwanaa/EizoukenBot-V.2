@@ -5,9 +5,16 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('changebotavatar')
 		.setDescription('Change bot avatar')
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+		.addStringOption(option =>
+			option
+				.setName('query')
+				.setDescription('Query to use to search for bot avatar')
+				.setRequired(false)
+		),
 
 	async execute(interaction, client) {
+		const query = interaction.options.getString('query')
 		let cooldown = client.cooldowns
 		const cooldownTimer = 30000
 		if (cooldown.has(interaction.user.id)) {
@@ -22,7 +29,7 @@ module.exports = {
 				})
 			}
 		} else {
-			await autoProfilePicChangeCommand.autoProfilePicChange(interaction, client)
+			await autoProfilePicChangeCommand.autoProfilePicChange(interaction, client, query)
 			cooldown.set(interaction.user.id, Date.now())
 			setTimeout(() => {
 				cooldown.delete(interaction.user.id)

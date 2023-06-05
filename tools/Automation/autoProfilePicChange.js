@@ -3,13 +3,13 @@ const themesData = require('../../data/themesData')
 const { googleAPIKey, customSearchEngineID } = process.env
 
 let exportedModules = {
-	async autoProfilePicChange(interaction, client) {
+	async autoProfilePicChange(interaction, client, query) {
 		const year = new Date().getFullYear()
 		const month = new Intl.DateTimeFormat('en-US', { month: 'long' })
 			.format(new Date())
 			.toLowerCase()
 		const imageChoiceNumber = Math.floor(Math.random() * 10 + Math.round(Math.random() * 3))
-		let searchQuery = await themesData.getThemes(year, month)
+		let searchQuery = query || (await themesData.getThemes(year, month))
 		console.log(searchQuery, imageChoiceNumber)
 
 		import('node-fetch')
