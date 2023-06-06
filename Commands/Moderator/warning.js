@@ -1,0 +1,147 @@
+const warningsData = require('../../data/warningData')
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('warning')
+		.setDescription('Complete warning command.')
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('add')
+				.setDescription('Add a warning.')
+				.addUserOption(option =>
+					option.setName('user').setDescription('User to add a warning to.').setRequired(true)
+				)
+				.addStringOption(option =>
+					option.setName('reason').setDescription('Reason for warning.').setRequired(false)
+				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('remove')
+				.setDescription('Remove a warning.')
+				.addUserOption(option =>
+					option.setName('user').setDescription('User to remove a warning from.').setRequired(true)
+				)
+				.addNumberOption(option =>
+					option.setName('id').setDescription('Case ID of warning').setRequired(true)
+				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('check')
+				.setDescription('Check warnings of a user.')
+				.addUserOption(option =>
+					option.setName('user').setDescription('User to check warnings for.').setRequired(true)
+				)
+		)
+		.addSubcommand(subcommand =>
+			subcommand
+				.setName('clear')
+				.setDescription('Clear all warnings of a user.')
+				.addUserOption(option =>
+					option.setName('user').setDescription('User to clear warnings from.').setRequired(true)
+				)
+		),
+
+	async execute(interaction) {
+		const { options } = interaction
+		const subcommand = options.getSubcommand()
+
+		switch (subcommand) {
+			case 'add':
+				try {
+					const user = options.getUser('user')
+					const reason = options.getString('reason')
+					const executor = interaction.user.tag
+					const warnDate = new Date(interaction.createdTimestamp).toLocaleDateString()
+					await warningsData.addWarning(user, reason, executor, warnDate)
+					interaction.reply({
+						content: `Successfully added a warning for ${user.tag}.`,
+						ephemeral: true,
+					})
+				} catch (error) {
+					console.log('theres been an error')
+					console.error(error)
+				}
+				break
+			case 'remove':
+				// TODO somehow find a way to use a unique indentifier to remove a warning from a user.
+				interaction.reply({ content: `Command is not implemented yet.`, ephemeral: true })
+				return
+				try {
+					const user = options.getUser('user')
+					const caseID = options.getNumber('id')
+					await warningsData.removeWarning(caseID, user.id)
+					await interaction.reply({
+						content: `Case: ${caseID} successfully removed from ${user.tag}`,
+						ephemeral: true,
+					})
+				} catch (error) {
+					await interaction.reply({
+						content: `Case: ${caseID} could not be removed from ${user.tag}`,
+						ephemeral: true,
+					})
+				}
+				break
+			case 'check':
+				try {
+					const user = options.getUser('user')
+					const userWarnings = await warningsData.getWarnings(user.id)
+
+					if (userWarnings.length === 0) {
+						const embed = new EmbedBuilder()
+							.setDescription(
+								`${user.tag} has no warnings.
+                        `
+							)
+							.setFooter({
+								text: `${interaction.member.user.tag}`,
+								iconURL: interaction.member.user.displayAvatarURL({ dynamic: true }),
+							})
+						await interaction.reply({ embeds: [embed], ephemeral: true })
+						return
+					}
+
+					const embed = new EmbedBuilder()
+						.setDescription(
+							`${userWarnings
+								.map(
+									(warning, index) =>
+										`
+						**caseID**: ${index + 1}
+						**executor**: ${warning.executor}
+						**reason**: ${warning.reason}
+						**date**: ${warning.warnDate}\n
+						`
+								)
+								.join(' ')}`
+						)
+						.setFooter({
+							text: `${interaction.member.user.tag}`,
+							iconURL: interaction.member.user.displayAvatarURL({ dynamic: true }),
+						})
+					await interaction.reply({ embeds: [embed], ephemeral: true })
+				} catch (error) {
+					console.error(error)
+				}
+				break
+			case 'clear':
+				try {
+					const user = options.getUser('user')
+					await warningsData.clearWarnings(user.id)
+					await interaction.reply({
+						content: `Successfully cleared all warnings for ${user.tag}.`,
+						ephemeral: true,
+					})
+				} catch (error) {
+					console.error(error)
+					await interaction.reply({
+						content: 'There was an error while trying to clear warnings from this user.',
+						ephemeral: true,
+					})
+				}
+				break
+		}
+	},
+}
