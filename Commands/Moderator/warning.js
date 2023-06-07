@@ -46,16 +46,20 @@ module.exports = {
 
 	async execute(interaction) {
 		const { options } = interaction
+		const user = options.getUser('user')
 		const subcommand = options.getSubcommand()
+		const userWarnings = await warningsData.getWarnings(user.id)
+		console.log(userWarnings)
 
 		switch (subcommand) {
 			case 'add':
 				try {
-					const user = options.getUser('user')
-					const reason = options.getString('reason')
+					const caseID = () => (userWarnings.length === 0 ? 0 : userWarnings.length)
+					console.log(caseID())
+					const reason = options.getString('reason') || 'No reason provided.'
 					const executor = interaction.user.tag
 					const warnDate = new Date(interaction.createdTimestamp).toLocaleDateString()
-					await warningsData.addWarning(user, reason, executor, warnDate)
+					await warningsData.addWarning(caseID(), user, reason, executor, warnDate)
 					interaction.reply({
 						content: `Successfully added a warning for ${user.tag}.`,
 						ephemeral: true,
@@ -66,27 +70,25 @@ module.exports = {
 				}
 				break
 			case 'remove':
-				// TODO somehow find a way to use a unique indentifier to remove a warning from a user.
+				// TODO find a way to update current warnings after one is removed.
 				interaction.reply({ content: `Command is not implemented yet.`, ephemeral: true })
 				return
 				try {
-					const user = options.getUser('user')
-					const caseID = options.getNumber('id')
+					const caseID = options.getNumber('id') - 1
 					await warningsData.removeWarning(caseID, user.id)
 					await interaction.reply({
-						content: `Case: ${caseID} successfully removed from ${user.tag}`,
+						content: `Case: ${caseID + 1} successfully removed from ${user.tag}`,
 						ephemeral: true,
 					})
 				} catch (error) {
 					await interaction.reply({
-						content: `Case: ${caseID} could not be removed from ${user.tag}`,
+						content: `Case: ${caseID + 1} could not be removed from ${user.tag}`,
 						ephemeral: true,
 					})
 				}
 				break
 			case 'check':
 				try {
-					const user = options.getUser('user')
 					const userWarnings = await warningsData.getWarnings(user.id)
 
 					if (userWarnings.length === 0) {
@@ -128,7 +130,6 @@ module.exports = {
 				break
 			case 'clear':
 				try {
-					const user = options.getUser('user')
 					await warningsData.clearWarnings(user.id)
 					await interaction.reply({
 						content: `Successfully cleared all warnings for ${user.tag}.`,

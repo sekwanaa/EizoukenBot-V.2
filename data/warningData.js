@@ -6,9 +6,10 @@ let exportedMethods = {
 		const warningsCollection = await warnings()
 		return await warningsCollection.find({ userID: userID }).toArray()
 	},
-	async addWarning(user, reason, executor, warnDate) {
+	async addWarning(caseID, user, reason, executor, warnDate) {
 		const warningsCollection = await warnings()
 		const warningObj = {
+			caseID,
 			user: user.tag,
 			userID: user.id,
 			reason,
