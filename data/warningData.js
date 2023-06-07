@@ -34,6 +34,22 @@ let exportedMethods = {
 			console.log(err)
 		}
 	},
+	async updateWarnings(userID) {
+		const warningsCollection = await warnings()
+		try {
+			const currentWarnings = await this.getWarnings(userID)
+			const updatedWarnings = currentWarnings.map((warning, index) => {
+				return {
+					...warning,
+					caseID: index,
+				}
+			})
+			await warningsCollection.deleteMany({ userID: userID })
+			await warningsCollection.insertMany(updatedWarnings)
+		} catch (err) {
+			console.log(err)
+		}
+	},
 }
 
 module.exports = exportedMethods
