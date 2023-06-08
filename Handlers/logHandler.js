@@ -9,7 +9,7 @@ function handleLogs(client) {
 		const channelId = await logData.getChannel(guildId)
 		const LogChannel = client.channels.cache.get(channelId)
 
-		// if (LogChannel) return
+		if (!LogChannel) return
 		embed.setTimestamp()
 
 		try {
