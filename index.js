@@ -9,6 +9,7 @@ const {
 	ThreadMember,
 	Collection,
 } = require(`discord.js`)
+const logs = require('discord-logs')
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const schedule = require('node-schedule')
@@ -16,6 +17,7 @@ const scheduleMessageCommand = require('./tools/Automation/scheduledMessage')
 const autoProfilePicChangeCommand = require('./tools/Automation/autoProfilePicChange')
 const { loadEvents } = require('./Handlers/eventHandler')
 const { loadCommands } = require('./Handlers/commandHandler')
+const { handleLogs } = require('./Handlers/logHandler')
 const prefix = '?'
 
 const client = new Client({
@@ -40,6 +42,10 @@ client.distube = new DisTube(client, {
 
 client.commands = new Collection()
 client.cooldowns = new Collection()
+
+logs(client, {
+	debug: true,
+})
 
 module.exports = client
 
@@ -73,4 +79,5 @@ const job2 = schedule.scheduleJob(autoProfilePicChange, function () {
 client.login(BOT_TOKEN).then(() => {
 	loadEvents(client)
 	loadCommands(client)
+	handleLogs(client)
 })

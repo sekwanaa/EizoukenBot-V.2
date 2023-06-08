@@ -20,4 +20,5 @@ module.exports = {
 	// put collection modules in here from data folder
 	themes: getCollectionFn('themes'),
 	warnings: getCollectionFn('warnings'),
+	logs: getCollectionFn('logs'),
 }
