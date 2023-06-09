@@ -20,10 +20,11 @@ module.exports = {
 			misc: '〽️',
 		}
 
-		const shownDirectoriesAdmin = ['admin', 'moderator', 'info', 'general', 'fun', 'music', 'misc']
-		const shownDirectoriesModerator = ['moderator', 'info', 'general', 'fun', 'music', 'misc']
-		const shownDirectoriesGeneral = ['general', 'info', 'fun', 'music', 'misc']
+		const shownDirectoriesAdmin = ['Admin', 'Moderator', 'Info', 'General', 'Fun', 'Music', 'Misc']
+		const shownDirectoriesModerator = ['Moderator', 'Info', 'General', 'Fun', 'Music', 'Misc']
+		const shownDirectoriesGeneral = ['General', 'Info', 'Fun', 'Music', 'Misc']
 		let shownDirectories = null
+
 		interaction.member._roles.includes('705096765858381944')
 			? (shownDirectories = shownDirectoriesAdmin)
 			: interaction.member._roles.includes('1104173240986914826')
