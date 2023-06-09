@@ -14,11 +14,12 @@ let exportedMethods = {
 		exists ? (result = true) : (result = false)
 		return result
 	},
-	async setupLogChannel(guildId, channelId, interaction) {
+	async setupLogChannel(guildId, guildName, channelId, interaction) {
 		const logCollection = await logs()
 		const exists = await this.checkIfExist(guildId)
 		if (!exists) {
 			await logCollection.insertOne({
+				guildName,
 				guildId,
 				channelId,
 			})
@@ -26,6 +27,7 @@ let exportedMethods = {
 		} else {
 			await logCollection.deleteOne({ guildId: guildId })
 			await logCollection.insertOne({
+				guildName,
 				guildId,
 				channelId,
 			})

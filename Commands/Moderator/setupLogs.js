@@ -14,10 +14,10 @@ module.exports = {
 		),
 
 	async execute(interaction) {
-		const { channel, guildId, options } = interaction
+		const { channel, guildId, member, options } = interaction
 		const logChannel = options.getChannel('channel') || channel
 		try {
-			await logData.setupLogChannel(guildId, logChannel.id, interaction)
+			await logData.setupLogChannel(guildId, member.guild.name, logChannel.id, interaction)
 		} catch {
 			return interaction.reply({
 				content: 'Sorry, something went wrong setting up your log channel',
