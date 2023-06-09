@@ -1,9 +1,13 @@
-const guildTool = require('../../tools/Guild/updateGuild')
+const mongoCollections = require('../../config/mongoCollections')
+const { themes, logs } = mongoCollections
 
 module.exports = {
 	name: 'guildUpdate',
 	once: false,
 	async execute(oldGuild, client) {
-		await guildTool.updateGuild(client.id, client.name)
+		const themesCollection = await themes()
+		const logsCollection = await logs()
+		await themesCollection.updateMany({ guildId: client.id }, { $set: { guildName: client.name } })
+		await logsCollection.updateOne({ guildId: client.id }, { $set: { guildName: client.name } })
 	},
 }
