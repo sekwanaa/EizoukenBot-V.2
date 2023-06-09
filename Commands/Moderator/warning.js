@@ -72,7 +72,6 @@ module.exports = {
 				try {
 					const caseID = options.getNumber('id') - 1
 					await warningsData.removeWarning(caseID, user.id)
-					// TODO then update current warnings case ID after one is removed.
 					await warningsData.updateWarnings(user.id)
 					await interaction.reply({
 						content: `Case: ${caseID + 1} successfully removed from ${user.tag}`,

@@ -21,4 +21,5 @@ module.exports = {
 	themes: getCollectionFn('themes'),
 	warnings: getCollectionFn('warnings'),
 	logs: getCollectionFn('logs'),
+	tallyBoard: getCollectionFn('tallyBoard'),
 }

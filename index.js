@@ -8,6 +8,7 @@ const {
 	GuildMember,
 	ThreadMember,
 	Collection,
+	Partials,
 } = require(`discord.js`)
 const logs = require('discord-logs')
 const { DisTube } = require('distube')
@@ -30,7 +31,14 @@ const client = new Client({
 		GatewayIntentBits.GuildPresences,
 		GatewayIntentBits.GuildVoiceStates,
 	],
-	partials: [User, Message, GuildMember, ThreadMember],
+	partials: [
+		User,
+		Partials.Message,
+		GuildMember,
+		ThreadMember,
+		Partials.Channel,
+		Partials.Reaction,
+	],
 })
 
 client.distube = new DisTube(client, {
