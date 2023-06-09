@@ -26,6 +26,10 @@ let exportedMethods = {
 		const themeObj = await themesCollection.findOne({ year: year, month: month })
 		return themeObj.theme
 	},
+	async updateGuild(guildId, guildName) {
+		const themesCollection = await themes()
+		await themesCollection.updateMany({ guildId: guildId }, { $set: { guildName: guildName } })
+	},
 	async themes(guildId, year) {
 		const themesCollection = await themes()
 		let message = ``
