@@ -26,32 +26,40 @@ let exportedMethods = {
 		const themeObj = await themesCollection.findOne({ year: year, month: month })
 		return themeObj.theme
 	},
-	async themes(year) {
+	async themes(guildId, year) {
 		const themesCollection = await themes()
 		let message = ``
 
 		for (i = 0; i < months.length; i++) {
-			const currentThemes = await themesCollection.findOne({ year: year, month: months[i] })
+			const currentThemes = await themesCollection.findOne({
+				guildId: guildId,
+				year: year,
+				month: months[i],
+			})
 			if (currentThemes != null) {
 				let month = await capitalize(currentThemes.month)
-				message += `\n\t ${month}: ${currentThemes.theme}`
+				message += `\n\t ${month}: ${currentThemes.theme || ' '}`
 			}
 		}
 
 		const embed = new EmbedBuilder()
 			.setTitle(`Themes for ${year}`)
-			.setDescription(`${message}`)
+			.setDescription(`${message || `There are no themes for ${year}`}`)
 			.setColor('Gold')
 
 		return embed
 	},
-	async addThemeData(month, year, theme) {
+	async addThemeData(guildName, guildId, month, year, theme) {
 		const themesCollection = await themes()
-		const currentThemes = await themesCollection.findOne({ year: year, month: month })
+		const currentThemes = await themesCollection.findOne({
+			guildId: guildId,
+			year: year,
+			month: month,
+		})
 		if (currentThemes != null) {
 			try {
 				await themesCollection.findOneAndUpdate(
-					{ year: year, month: month },
+					{ guildId: guildId, year: year, month: month },
 					{ $set: { theme: theme } }
 				)
 				if (currentThemes.theme == '') {
@@ -65,9 +73,11 @@ let exportedMethods = {
 		} else {
 			try {
 				let newTheme = {
-					year: year,
-					month: month,
-					theme: theme,
+					guildName,
+					guildId,
+					year,
+					month,
+					theme,
 				}
 
 				const add_theme = await themesCollection.insertOne(newTheme)
@@ -77,11 +87,11 @@ let exportedMethods = {
 			}
 		}
 	},
-	async removeThemeData(month, year) {
+	async removeThemeData(guildId, month, year) {
 		try {
 			const themesCollection = await themes()
 			const removeTheme = await themesCollection.findOneAndUpdate(
-				{ year: year, month: month },
+				{ guildId, year, month },
 				{ $set: { theme: '' } }
 			)
 			return `You have successfully removed the theme from ${month} ${year}`
