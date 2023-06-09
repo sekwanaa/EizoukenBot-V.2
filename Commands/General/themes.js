@@ -13,12 +13,7 @@ module.exports = {
 		const { guild, options } = interaction
 		const year = options.getInteger('year') || new Date().getFullYear()
 		const guildId = guild.id
-		if (year) {
-			const message = await themesData.themes(guildId, year)
-			interaction.reply({ embeds: [message] })
-		} else {
-			const message = await themesData.themes(guildId, year)
-			interaction.reply({ embeds: [message] })
-		}
+		const message = await themesData.themes(guildId, year)
+		interaction.reply({ embeds: [message] })
 	},
 }

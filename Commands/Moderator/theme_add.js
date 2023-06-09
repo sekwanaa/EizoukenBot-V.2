@@ -25,14 +25,8 @@ module.exports = {
 		const guildId = guild.id
 		const month = options.getString('month')
 		const theme = options.getString('theme')
-		const year = options.getInteger('year')
-		if (year) {
-			const action = await themesData.addThemeData(guildName, guildId, month, year, theme)
-			interaction.reply({ content: `${action}` })
-		} else {
-			const year = new Date().getFullYear()
-			const action = await themesData.addThemeData(guildName, guildId, month, year, theme)
-			interaction.reply({ content: `${action}` })
-		}
+		const year = options.getInteger('year') || new Date().getFullYear()
+		const action = await themesData.addThemeData(guildName, guildId, month, year, theme)
+		interaction.reply({ content: `${action}` })
 	},
 }

@@ -20,14 +20,8 @@ module.exports = {
 		const { guild, options } = interaction
 		const guildId = guild.id
 		const month = options.getString('month')
-		const year = options.getInteger('year')
-		if (year) {
-			const action = await themesData.removeThemeData(guildId, month, year)
-			interaction.reply({ content: `${action}` })
-		} else {
-			const year = new Date().getFullYear()
-			const action = await themesData.removeThemeData(guildId, month, year)
-			interaction.reply({ content: `${action}` })
-		}
+		const year = options.getInteger('year') || new Date().getFullYear()
+		const action = await themesData.removeThemeData(guildId, month, year)
+		interaction.reply({ content: `${action}` })
 	},
 }

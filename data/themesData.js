@@ -94,10 +94,7 @@ let exportedMethods = {
 	async removeThemeData(guildId, month, year) {
 		try {
 			const themesCollection = await themes()
-			const removeTheme = await themesCollection.findOneAndUpdate(
-				{ guildId, year, month },
-				{ $set: { theme: '' } }
-			)
+			await themesCollection.findOneAndDelete({ guildId, year, month })
 			return `You have successfully removed the theme from ${month} ${year}`
 		} catch (error) {
 			return error
