@@ -1,10 +1,11 @@
 const warningsData = require('../../data/warningData')
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('warning')
 		.setDescription('Complete warning command.')
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName('add')

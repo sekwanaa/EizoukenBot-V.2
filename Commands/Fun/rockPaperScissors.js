@@ -5,24 +5,20 @@ module.exports = {
 		.setName('rps')
 		.setDescription('Rock Paper Scissors')
 		.addStringOption(option =>
-			option.setName('choice').setDescription('rock, paper or scissors').setRequired(true)
+			option
+				.setName('choice')
+				.setDescription('rock, paper or scissors')
+				.setChoices(
+					{ name: 'Rock', value: 'rock' },
+					{ name: 'Paper', value: 'paper' },
+					{ name: 'Scissors', value: 'scissors' }
+				)
+				.setRequired(true)
 		),
 
 	async execute(interaction) {
 		const { options } = interaction
 		let choice = options.getString('choice')
-		if (choice === 'rock' || choice === 'Rock' || choice === '1' || choice === 'r') {
-			choice = 'rock'
-		} else if (choice === 'paper' || choice === 'Paper' || choice === '2' || choice === 'p') {
-			choice = 'paper'
-		} else if (choice === 'scissors' || choice === 'Scissors' || choice === '3' || choice === 's') {
-			choice = 'scissors'
-		} else {
-			return interaction.reply({
-				content: 'Please choose a valid choice.',
-				ephemeral: true,
-			})
-		}
 		const botNumber = Math.floor(Math.random() * 3) + 1
 		let botChoice = ''
 		botNumber === 1
