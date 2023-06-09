@@ -14,6 +14,6 @@ module.exports = {
 		const year = options.getInteger('year') || new Date().getFullYear()
 		const guildId = guild.id
 		const message = await themesData.themes(guildId, year)
-		interaction.reply({ embeds: [message] })
+		interaction.reply({ embeds: [message], ephemeral: true })
 	},
 }
