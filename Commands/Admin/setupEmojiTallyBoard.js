@@ -15,37 +15,42 @@ module.exports = {
 		const channelChoice = options.getChannel('channel') || channel
 		const tallyEmbed = new EmbedBuilder().setTitle(`Emoji Tally Board`)
 
+		let messageId = ''
+
 		const exists = await tallyBoardData.getTallyBoard(guildId)
 
-		if (exists) {
-			try {
-				await tallyBoardData.updateTallyBoard(guildId, channelChoice.id)
-				await channelChoice.send({ embeds: [tallyEmbed] })
-				return interaction.reply({
+		if (exists !== null) {
+			return interaction
+				.reply({
 					content: `Your emoji tally board channel has been updated to #${channelChoice.name}`,
 					ephemeral: true,
 				})
-			} catch (error) {
-				return interaction.reply({
-					content: `There was an error while setting up your emoji tally board`,
-					ephemeral: true,
+				.then(
+					channelChoice.send({ embeds: [tallyEmbed] }).then(msg => {
+						messageId = msg.id
+						tallyBoardData.updateTallyBoard(guildId, channelChoice.id, messageId)
+					})
+				)
+				.catch(error => {
+					console.log(error)
+					interaction.reply({ content: `There was something that went wrong` })
 				})
-			}
 		}
 
-		try {
-			await tallyBoardData.addTallyBoard(guildId, channelChoice.id)
-		} catch (error) {
-			return interaction.reply({
-				content: `There was an error while setting up your emoji tally board`,
+		return interaction
+			.reply({
+				content: `Your emoji tally board has been setup in #${channelChoice.name}`,
 				ephemeral: true,
 			})
-		}
-
-		await channelChoice.send({ embeds: [tallyEmbed] })
-		return interaction.reply({
-			content: `Your emoji tally board has been setup in #${channelChoice.name}`,
-			ephemeral: true,
-		})
+			.then(
+				channelChoice.send({ embeds: [tallyEmbed] }).then(msg => {
+					messageId = msg.id
+					tallyBoardData.addTallyBoard(guildId, channelChoice.id, messageId)
+				})
+			)
+			.catch(error => {
+				console.log(error)
+				interaction.reply({ content: `There was something that went wrong` })
+			})
 	},
 }

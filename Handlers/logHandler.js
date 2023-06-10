@@ -227,7 +227,6 @@ function handleLogs(client) {
 
 	// Message Edited
 	client.on('messageUpdate', (message, oldContent, newContent) => {
-		console.log('Edited')
 		const embed = new EmbedBuilder()
 			.setTitle('Message Edited')
 			.setColor('Grey')

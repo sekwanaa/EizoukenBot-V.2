@@ -4,16 +4,25 @@ const tallyBoard = mongoCollections.tallyBoard
 let exportedMethods = {
 	async getTallyBoard(guildId) {
 		const tallyBoardCollection = await tallyBoard()
-		const guild = await tallyBoardCollection.findOne({ guildId: guildId })
-		return guild.channelId
+		const guildTallyBoard = await tallyBoardCollection.findOne({ guildId: guildId })
+		let result = null
+		guildTallyBoard ? (result = guildTallyBoard) : (result = null)
+		return result
 	},
-	async addTallyBoard(guildId, channelId) {
+	async addTallyBoard(guildId, channelId, messageId) {
 		const tallyBoardCollection = await tallyBoard()
-		await tallyBoardCollection.insertOne({ guildId: guildId, channelId: channelId })
+		await tallyBoardCollection.insertOne({
+			guildId: guildId,
+			channelId: channelId,
+			messageId: messageId,
+		})
 	},
-	async updateTallyBoard(guildId, channelId) {
+	async updateTallyBoard(guildId, channelId, messageId) {
 		const tallyBoardCollection = await tallyBoard()
-		await tallyBoardCollection.updateOne({ guildId: guildId }, { $set: { channelId: channelId } })
+		await tallyBoardCollection.updateOne(
+			{ guildId: guildId },
+			{ $set: { channelId: channelId, messageId: messageId } }
+		)
 	},
 }
 
