@@ -9,20 +9,16 @@ let exportedMethods = {
 		guildTallyBoard ? (result = guildTallyBoard) : (result = null)
 		return result
 	},
-	async addTallyBoard(guildId, channelId, messageId) {
+	async addTallyBoard(guildId, channelId) {
 		const tallyBoardCollection = await tallyBoard()
 		await tallyBoardCollection.insertOne({
 			guildId: guildId,
 			channelId: channelId,
-			messageId: messageId,
 		})
 	},
-	async updateTallyBoard(guildId, channelId, messageId) {
+	async updateTallyBoard(guildId, channelId) {
 		const tallyBoardCollection = await tallyBoard()
-		await tallyBoardCollection.updateOne(
-			{ guildId: guildId },
-			{ $set: { channelId: channelId, messageId: messageId } }
-		)
+		await tallyBoardCollection.updateOne({ guildId: guildId }, { $set: { channelId: channelId } })
 	},
 }
 

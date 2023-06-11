@@ -13,9 +13,6 @@ module.exports = {
 	async execute(interaction) {
 		const { options, guildId, channel } = interaction
 		const channelChoice = options.getChannel('channel') || channel
-		const tallyEmbed = new EmbedBuilder().setTitle(`Emoji Tally Board`)
-
-		let messageId = ''
 
 		const exists = await tallyBoardData.getTallyBoard(guildId)
 
@@ -25,12 +22,7 @@ module.exports = {
 					content: `Your emoji tally board channel has been updated to #${channelChoice.name}`,
 					ephemeral: true,
 				})
-				.then(
-					channelChoice.send({ embeds: [tallyEmbed] }).then(msg => {
-						messageId = msg.id
-						tallyBoardData.updateTallyBoard(guildId, channelChoice.id, messageId)
-					})
-				)
+				.then(tallyBoardData.updateTallyBoard(guildId, channelChoice.id))
 				.catch(error => {
 					console.log(error)
 					interaction.reply({ content: `There was something that went wrong` })
@@ -42,12 +34,7 @@ module.exports = {
 				content: `Your emoji tally board has been setup in #${channelChoice.name}`,
 				ephemeral: true,
 			})
-			.then(
-				channelChoice.send({ embeds: [tallyEmbed] }).then(msg => {
-					messageId = msg.id
-					tallyBoardData.addTallyBoard(guildId, channelChoice.id, messageId)
-				})
-			)
+			.then(tallyBoardData.addTallyBoard(guildId, channelChoice.id))
 			.catch(error => {
 				console.log(error)
 				interaction.reply({ content: `There was something that went wrong` })
