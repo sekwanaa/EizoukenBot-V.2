@@ -27,6 +27,19 @@
 
 		],
 		"description": "discord command builder"
+	},
+	"Discord Event": {
+		"scope": "javascript",
+		"prefix": "dcevt",
+		"body": [
+			"\n\nmodule.exports = {",
+			"\tname: '$0',",
+			"\tonce: false,",
+			"\tasync execute(interaction) {\n\t\t\n\t},",
+			"};"
+
+		],
+		"description": "discord client event builder"
 	}
 	
 }
