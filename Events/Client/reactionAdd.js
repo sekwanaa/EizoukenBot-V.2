@@ -5,6 +5,7 @@ module.exports = {
 	name: 'messageReactionAdd',
 	once: false,
 	async execute(messageReaction, User, client) {
+		return
 		if (messageReaction.me) return //* doesn't work if bot reacts otherwise its an infinite loop
 		if (!messageReaction.message.author) return //* only cached messages will work
 
