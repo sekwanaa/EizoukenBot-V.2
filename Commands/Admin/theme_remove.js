@@ -3,7 +3,7 @@ const themesData = require('../../data/themesData')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('remove_theme')
+		.setName('remove-theme')
 		.setDescription('Allows user to add/change a theme for a month')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addStringOption(option =>

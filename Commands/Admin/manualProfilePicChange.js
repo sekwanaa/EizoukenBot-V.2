@@ -3,7 +3,7 @@ const autoProfilePicChangeCommand = require('../../tools/Automation/autoProfileP
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('changebotavatar')
+		.setName('change-bot-avatar')
 		.setDescription('Change bot avatar')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addStringOption(option =>

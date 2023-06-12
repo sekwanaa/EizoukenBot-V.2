@@ -3,7 +3,7 @@ const themesData = require('../../data/themesData')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('add_theme')
+		.setName('add-theme')
 		.setDescription('Allows user to add/change a theme for a month')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addStringOption(option =>

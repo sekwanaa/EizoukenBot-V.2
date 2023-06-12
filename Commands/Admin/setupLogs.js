@@ -3,7 +3,7 @@ const logData = require('../../data/logData')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('setuplogs')
+		.setName('setup-logs')
 		.setDescription('Set up the logs channel')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addChannelOption(option =>
