@@ -21,8 +21,8 @@
 		"body": [
 			"const { SlashCommandBuilder } = require('discord.js');\n",
 			"module.exports = {\n",
-			"\tdata: new SlashCommandBuilder()\n\t.setName('$0'),\n",
-			"\tasync execute(interaction) {\n\t\t\n\t},",
+			"\tdata: new SlashCommandBuilder()\n\t.setName('$1')$2,\n",
+			"\tasync execute(interaction) {\n\t\t$0\n\t},",
 			"};"
 
 		],
@@ -30,12 +30,12 @@
 	},
 	"Discord Event": {
 		"scope": "javascript",
-		"prefix": "dcevt",
+		"prefix": "devt",
 		"body": [
-			"\n\nmodule.exports = {",
-			"\tname: '$0',",
+			"$2\n\nmodule.exports = {",
+			"\tname: '$1',",
 			"\tonce: false,",
-			"\tasync execute(interaction) {\n\t\t\n\t},",
+			"\tasync execute(interaction) {\n\t\t$0\n\t},",
 			"};"
 
 		],
