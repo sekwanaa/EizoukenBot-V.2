@@ -5,7 +5,7 @@ module.exports = {
 
 	async execute(interaction, client) {
 		const { uptime } = client
-		console.log(client.user)
+		// console.log(client.guilds)
 
 		const embed = new EmbedBuilder()
 			.setAuthor({
@@ -13,7 +13,7 @@ module.exports = {
 				iconURL: client.user.displayAvatarURL({ dynamic: true }),
 			})
 			.addFields(
-				{ name: 'Guilds', value: `${1}`, inline: true },
+				{ name: 'Guilds', value: `${client.guilds.cache.size}`, inline: true },
 				{ name: 'Uptime', value: `${Math.floor(uptime / 60000)} minutes` }
 			)
 			.setTimestamp()
