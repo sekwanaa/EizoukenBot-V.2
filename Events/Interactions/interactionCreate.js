@@ -20,11 +20,19 @@ module.exports = {
 
 			if (!roleIdArr.includes(interaction.customId)) return
 
-			await interaction.member.roles.add(interaction.customId)
-			return interaction.reply({
-				content: `Thank you for agreeing to our rules, happy hunting 🥳`,
-				ephemeral: true,
-			})
+			try {
+				await interaction.member.roles.add(interaction.customId)
+				return interaction.reply({
+					content: `Thank you for agreeing to our rules, happy hunting 🥳`,
+					ephemeral: true,
+				})
+			} catch (error) {
+				console.log(error)
+				return interaction.reply({
+					content: 'Something went wrong',
+					ephemeral: true,
+				})
+			}
 
 			// console.log(interaction)
 		} else if (interaction.isStringSelectMenu()) {
