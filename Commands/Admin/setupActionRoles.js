@@ -19,10 +19,7 @@ module.exports = {
 					option.setName(`label`).setDescription(`The label of the button`).setRequired(true)
 				)
 				.addRoleOption(option =>
-					option
-						.setName(`custom-id`)
-						.setDescription(`The role your button will give`)
-						.setRequired(true)
+					option.setName(`role`).setDescription(`The role your button will give`).setRequired(true)
 				)
 				.addStringOption(option =>
 					option
@@ -61,7 +58,7 @@ module.exports = {
 		switch (subcommand) {
 			case 'create':
 				const label = options.getString(`label`)
-				const customId = options.getRole(`custom-id`)
+				const customId = options.getRole(`role`)
 				const buttonType = options.getString(`type`)
 
 				const button = new ButtonBuilder()
