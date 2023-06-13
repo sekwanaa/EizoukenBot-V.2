@@ -8,6 +8,6 @@ module.exports = {
 		const themesCollection = await themes()
 		const logsCollection = await logs()
 		await themesCollection.updateMany({ guildId: client.id }, { $set: { guildName: client.name } })
-		await logsCollection.updateOne({ guildId: client.id }, { $set: { guildName: client.name } })
+		await logsCollection.updateMany({ guildId: client.id }, { $set: { guildName: client.name } })
 	},
 }

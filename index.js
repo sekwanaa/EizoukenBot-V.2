@@ -4,7 +4,6 @@ const {
 	Client,
 	GatewayIntentBits,
 	User,
-	Message,
 	GuildMember,
 	ThreadMember,
 	Collection,
@@ -30,6 +29,7 @@ const client = new Client({
 		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.GuildPresences,
 		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.MessageContent,
 	],
 	partials: [
 		User,

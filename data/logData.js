@@ -2,19 +2,19 @@ const mongoCollections = require('../config/mongoCollections')
 const logs = mongoCollections.logs
 
 let exportedMethods = {
-	async getChannel(guildId) {
+	async getChannel(guildId, type) {
 		const logCollection = await logs()
-		const guild = await logCollection.findOne({ guildId: guildId })
+		const guild = await logCollection.findOne({ guildId: guildId, type: type })
 		return guild.channelId
 	},
-	async checkIfExist(guildId) {
+	async checkIfExist(guildId, type) {
 		const logCollection = await logs()
-		const exists = await logCollection.findOne({ guildId: guildId })
+		const exists = await logCollection.findOne({ guildId: guildId, type: type })
 		let result
 		exists ? (result = true) : (result = false)
 		return result
 	},
-	async setupLogChannel(guildId, guildName, channelId, interaction) {
+	async setupLogChannel(guildId, guildName, channelId, type, interaction) {
 		const logCollection = await logs()
 		const exists = await this.checkIfExist(guildId)
 		if (!exists) {
@@ -22,20 +22,25 @@ let exportedMethods = {
 				guildName,
 				guildId,
 				channelId,
-			})
-			return interaction.reply({ content: 'Successfully setup log channel', ephemeral: true })
-		} else {
-			await logCollection.deleteOne({ guildId: guildId })
-			await logCollection.insertOne({
-				guildName,
-				guildId,
-				channelId,
+				type,
 			})
 			return interaction.reply({
-				content: 'Successfully replaced old log channel',
+				content: `Successfully setup ${type} log channel`,
 				ephemeral: true,
 			})
 		}
+
+		await logCollection.deleteOne({ guildId: guildId, type: type })
+		await logCollection.insertOne({
+			guildName,
+			guildId,
+			channelId,
+			type,
+		})
+		return interaction.reply({
+			content: 'Successfully replaced old log channel',
+			ephemeral: true,
+		})
 	},
 }
 

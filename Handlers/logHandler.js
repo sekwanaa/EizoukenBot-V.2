@@ -3,10 +3,45 @@ const { EmbedBuilder } = require('discord.js')
 function handleLogs(client) {
 	const logData = require('../data/logData.js')
 
-	async function send_log(guildId, embed) {
-		const guildExists = await logData.checkIfExist(guildId)
+	async function send_guildEvents_log(guildId, embed) {
+		const type = 'guildEvent'
+		const guildExists = await logData.checkIfExist(guildId, type)
 		if (!guildExists) return
-		const channelId = await logData.getChannel(guildId)
+		const channelId = await logData.getChannel(guildId, type)
+		const LogChannel = client.channels.cache.get(channelId)
+
+		if (!LogChannel) return
+		embed.setTimestamp()
+
+		try {
+			LogChannel.send({ embeds: [embed] })
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	async function send_text_log(guildId, embed) {
+		const type = 'text'
+		const guildExists = await logData.checkIfExist(guildId, type)
+		if (!guildExists) return
+		const channelId = await logData.getChannel(guildId, type)
+		const LogChannel = client.channels.cache.get(channelId)
+
+		if (!LogChannel) return
+		embed.setTimestamp()
+
+		try {
+			LogChannel.send({ embeds: [embed] })
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	async function send_voice_log(guildId, embed) {
+		const type = 'voice'
+		const guildExists = await logData.checkIfExist(guildId, type)
+		if (!guildExists) return
+		const channelId = await logData.getChannel(guildId, type)
 		const LogChannel = client.channels.cache.get(channelId)
 
 		if (!LogChannel) return
@@ -29,7 +64,7 @@ function handleLogs(client) {
             **Deleted Message : **\`${message.content.replace(/`/g, "'")}\`
          `)
 
-		return send_log(message.guild.id, embed)
+		return send_text_log(message.guild.id, embed)
 	})
 
 	// Channel Topic Updating
@@ -39,7 +74,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`${channel} Topic changed from **${oldTopic}** to **${newTopic}**`)
 
-		return send_log(channel.guild.id, embed)
+		return send_guildEvents_log(channel.guild.id, embed)
 	})
 
 	// Channel Permission Updating
@@ -49,7 +84,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(channel.name + 's permissions updated!')
 
-		return send_log(channel.guild.id, embed)
+		return send_guildEvents_log(channel.guild.id, embed)
 	})
 
 	// unhandled Guild Channel Update
@@ -63,7 +98,7 @@ function handleLogs(client) {
 					"' was edited but discord-logs couldn't find what was updated..."
 			)
 
-		return send_log(oldChannel.guild.id, embed)
+		return send_guildEvents_log(oldChannel.guild.id, embed)
 	})
 
 	// Member Started Boosting
@@ -72,7 +107,7 @@ function handleLogs(client) {
 			.setTitle('User Started Boosting!')
 			.setColor('Pink')
 			.setDescription(`**${member.user.tag}** has started boosting  ${member.guild.name}!`)
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Member Unboosted
@@ -82,7 +117,7 @@ function handleLogs(client) {
 			.setColor('Pink')
 			.setDescription(`**${member.user.tag}** has stopped boosting  ${member.guild.name}!`)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Member Got Role
@@ -92,7 +127,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`**${member.user.tag}** got the role \`${role.name}\``)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Member Lost Role
@@ -102,7 +137,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(`**${member.user.tag}** lost the role \`${role.name}\``)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Nickname Changed
@@ -114,7 +149,7 @@ function handleLogs(client) {
 				`${member.user.tag} changed nickname from \`${oldNickname}\` to \`${newNickname}\``
 			)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Member Joined
@@ -127,7 +162,7 @@ function handleLogs(client) {
 				member.user.displayAvatarURL({ dynamic: true })
 			)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Member Joined
@@ -140,7 +175,7 @@ function handleLogs(client) {
 				member.user.displayAvatarURL({ dynamic: true })
 			)
 
-		return send_log(member.guild.id, embed)
+		return send_guildEvents_log(member.guild.id, embed)
 	})
 
 	// Server Boost Level Up
@@ -150,7 +185,7 @@ function handleLogs(client) {
 			.setColor('Pink')
 			.setDescription(`${guild.name} reached the boost level ${newLevel}`)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Server Boost Level Down
@@ -160,7 +195,7 @@ function handleLogs(client) {
 			.setColor('Pink')
 			.setDescription(`${guild.name} lost a level from ${oldLevel} to ${newLevel}`)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Banner Added
@@ -170,7 +205,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setImage(bannerURL)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// AFK Channel Added
@@ -180,7 +215,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`${guild.name} has a new afk channel ${afkChannel}`)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Guild Vanity Add
@@ -190,7 +225,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`${guild.name} has a vanity link ${vanityURL}`)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Guild Vanity Remove
@@ -200,7 +235,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(`${guild.name} has removed its vanity URL ${vanityURL}`)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Guild Vanity Link Updated
@@ -212,7 +247,7 @@ function handleLogs(client) {
 				`${guild.name} has changed its vanity URL from ${oldVanityURL} to ${newVanityURL}!`
 			)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Message Pinned
@@ -222,19 +257,19 @@ function handleLogs(client) {
 			.setColor('Grey')
 			.setDescription(`${message} has been pinned by ${message.author}`)
 
-		return send_log(message.guild.id, embed)
+		return send_text_log(message.guild.id, embed)
 	})
 
 	// Message Edited
-	client.on('messageUpdate', (message, oldContent, newContent) => {
+	client.on('messageUpdate', (oldMessage, newMessage) => {
 		const embed = new EmbedBuilder()
 			.setTitle('Message Edited')
 			.setColor('Grey')
 			.setDescription(
-				`Message Edited from \`${oldContent}\` to \`${newContent}\` by ${message.author}`
+				`Message Edited from \`${oldMessage.content}\` to \`${newMessage.content}\` by ${newMessage.author}`
 			)
 
-		return send_log(message.guild.id, embed)
+		return send_text_log(newMessage.guild.id, embed)
 	})
 
 	// Role Position Updated
@@ -250,7 +285,7 @@ function handleLogs(client) {
 					newPosition
 			)
 
-		return send_log(role.guild.id, embed)
+		return send_guildEvents_log(role.guild.id, embed)
 	})
 
 	// Role Permission Updated
@@ -266,7 +301,7 @@ function handleLogs(client) {
 					newPermissions
 			)
 
-		return send_log(role.guild.id, embed)
+		return send_guildEvents_log(role.guild.id, embed)
 	})
 
 	// Username Updated
@@ -276,7 +311,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`${user.tag} updated their username from ${oldUsername} to ${newUsername}`)
 
-		return send_log(user.guild.id, embed)
+		return send_guildEvents_log(user.guild.id, embed)
 	})
 
 	// Discriminator Updated
@@ -288,7 +323,7 @@ function handleLogs(client) {
 				`${user.tag} updated their discriminator from ${oldDiscriminator} to ${oldDiscriminator}`
 			)
 
-		return send_log(user.guild.id, embed)
+		return send_guildEvents_log(user.guild.id, embed)
 	})
 
 	// Joined VC
@@ -298,7 +333,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(member.user.tag + ' joined ' + `${channel}` + '!')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// Left VC
@@ -308,7 +343,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(member.user.tag + ' left ' + `${channel}` + '!')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// VC Switch
@@ -320,7 +355,7 @@ function handleLogs(client) {
 				member.user.tag + ' left ' + oldChannel.name + ' and joined ' + newChannel.name + '!'
 			)
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// VC Mute
@@ -330,7 +365,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(member.user.tag + ' became muted! (type: ' + muteType + ')')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// VC Unmute
@@ -340,7 +375,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(member.user.tag + ' became unmuted!')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// VC Defean
@@ -350,7 +385,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(member.user.tag + ' become deafed!')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// VC Undefean
@@ -360,7 +395,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(member.user.tag + ' become undeafed!')
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// User Started to Stream
@@ -370,7 +405,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(member.user.tag + ' started streaming in ' + voiceChannel.name)
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// User Stopped to Stream
@@ -380,7 +415,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(member.user.tag + ' stopped streaming in ' + voiceChannel.name)
 
-		return send_log(member.guild.id, embed)
+		return send_voice_log(member.guild.id, embed)
 	})
 
 	// Member Became Offline
@@ -412,7 +447,7 @@ function handleLogs(client) {
 				`Role: ${role}\nRolename: ${role.name}\nRoleID: ${role.id}\nHEX Code: ${role.hexColor}\nPosition: ${role.position}`
 			)
 
-		return send_log(role.guild.id, embed)
+		return send_guildEvents_log(role.guild.id, embed)
 	})
 
 	// Role Deleted
@@ -424,7 +459,7 @@ function handleLogs(client) {
 				`Role: ${role}\nRolename: ${role.name}\nRoleID: ${role.id}\nHEX Code: ${role.hexColor}\nPosition: ${role.position}`
 			)
 
-		return send_log(role.guild.id, embed)
+		return send_guildEvents_log(role.guild.id, embed)
 	})
 
 	// User Banned
@@ -437,7 +472,7 @@ function handleLogs(client) {
 				user.displayAvatarURL({ dynamic: true })
 			)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// User Unbanned
@@ -450,7 +485,7 @@ function handleLogs(client) {
 				user.displayAvatarURL({ dynamic: true })
 			)
 
-		return send_log(guild.id, embed)
+		return send_guildEvents_log(guild.id, embed)
 	})
 
 	// Channel Created
@@ -460,7 +495,7 @@ function handleLogs(client) {
 			.setColor('Green')
 			.setDescription(`${channel.name} has been created.`)
 
-		return send_log(channel.guild.id, embed)
+		return send_guildEvents_log(channel.guild.id, embed)
 	})
 
 	// Channel Deleted
@@ -470,7 +505,7 @@ function handleLogs(client) {
 			.setColor('Red')
 			.setDescription(`${channel.name} has been deleted.`)
 
-		return send_log(channel.guild.id, embed)
+		return send_guildEvents_log(channel.guild.id, embed)
 	})
 }
 
