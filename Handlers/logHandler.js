@@ -384,24 +384,24 @@ function handleLogs(client) {
 	})
 
 	// Member Became Offline
-	client.on('guildMemberOffline', (member, oldStatus) => {
-		const embed = new EmbedBuilder()
-			.setTitle('User Offline')
-			.setColor('Green')
-			.setDescription(member.user.tag + ' went offline!')
+	// client.on('guildMemberOffline', (member, oldStatus) => {
+	// 	const embed = new EmbedBuilder()
+	// 		.setTitle('User Offline')
+	// 		.setColor('Green')
+	// 		.setDescription(member.user.tag + ' went offline!')
 
-		return send_log(member.guild.id, embed)
-	})
+	// 	return send_log(member.guild.id, embed)
+	// })
 
 	// Member Became Online
-	client.on('guildMemberOnline', (member, newStatus) => {
-		const embed = new EmbedBuilder()
-			.setTitle('User Online')
-			.setColor('#2F3136')
-			.setDescription(member.user.tag + ' was offline and is now ' + newStatus + '!')
+	// client.on('guildMemberOnline', (member, newStatus) => {
+	// 	const embed = new EmbedBuilder()
+	// 		.setTitle('User Online')
+	// 		.setColor('#2F3136')
+	// 		.setDescription(member.user.tag + ' was offline and is now ' + newStatus + '!')
 
-		return send_log(member.guild.id, embed)
-	})
+	// 	return send_log(member.guild.id, embed)
+	// })
 
 	// Role Created
 	client.on('roleCreate', role => {
