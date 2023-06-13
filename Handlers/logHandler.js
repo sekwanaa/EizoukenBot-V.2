@@ -20,7 +20,7 @@ function handleLogs(client) {
 	}
 
 	client.on('messageDelete', function (message) {
-		if (message.author == null || message.author.bot) return
+		if (message?.author?.bot === undefined) return
 
 		const embed = new EmbedBuilder().setTitle('Message Deleted').setColor('Red').setDescription(`
             **Author : ** <@${message.author.id}> - *${message.author.tag}*
