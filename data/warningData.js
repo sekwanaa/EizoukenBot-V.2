@@ -2,13 +2,14 @@ const mongoCollections = require('../config/mongoCollections')
 const warnings = mongoCollections.warnings
 
 let exportedMethods = {
-	async getWarnings(userID) {
+	async getWarnings(guildId, userID) {
 		const warningsCollection = await warnings()
-		return await warningsCollection.find({ userID: userID }).toArray()
+		return await warningsCollection.find({ guildId: guildId, userID: userID }).toArray()
 	},
-	async addWarning(caseID, user, reason, executor, warnDate) {
+	async addWarning(guildId, caseID, user, reason, executor, warnDate) {
 		const warningsCollection = await warnings()
 		const warningObj = {
+			guildId,
 			caseID,
 			user: user.tag,
 			userID: user.id,
@@ -18,33 +19,33 @@ let exportedMethods = {
 		}
 		await warningsCollection.insertOne(warningObj)
 	},
-	async removeWarning(caseID, userID) {
+	async removeWarning(guildId, caseID, userID) {
 		const warningsCollection = await warnings()
 		try {
-			await warningsCollection.deleteOne({ caseID: caseID, userID: userID })
+			await warningsCollection.deleteOne({ guildId: guildId, caseID: caseID, userID: userID })
 		} catch (err) {
 			console.log(err)
 		}
 	},
-	async clearWarnings(userID) {
+	async clearWarnings(guildId, userID) {
 		const warningsCollection = await warnings()
 		try {
-			await warningsCollection.deleteMany({ userID: userID })
+			await warningsCollection.deleteMany({ guildId: guildId, userID: userID })
 		} catch (err) {
 			console.log(err)
 		}
 	},
-	async updateWarnings(userID) {
+	async updateWarnings(guildId, userID) {
 		const warningsCollection = await warnings()
 		try {
-			const currentWarnings = await this.getWarnings(userID)
+			const currentWarnings = await this.getWarnings(guildId, userID)
 			const updatedWarnings = currentWarnings.map((warning, index) => {
 				return {
 					...warning,
 					caseID: index,
 				}
 			})
-			await warningsCollection.deleteMany({ userID: userID })
+			await warningsCollection.deleteMany({ guildId: guildId, userID: userID })
 			await warningsCollection.insertMany(updatedWarnings)
 		} catch (err) {
 			console.log(err)

@@ -46,7 +46,7 @@ module.exports = {
 		),
 
 	async execute(interaction) {
-		const { options } = interaction
+		const { options, guildId } = interaction
 		const user = options.getUser('user')
 		const subcommand = options.getSubcommand()
 		const userWarnings = await warningsData.getWarnings(user.id)
@@ -58,7 +58,7 @@ module.exports = {
 					const reason = options.getString('reason') || 'No reason provided.'
 					const executor = interaction.user.tag
 					const warnDate = new Date(interaction.createdTimestamp).toLocaleDateString()
-					await warningsData.addWarning(caseID(), user, reason, executor, warnDate)
+					await warningsData.addWarning(guildId, caseID(), user, reason, executor, warnDate)
 					interaction.reply({
 						content: `Successfully added a warning for ${user.tag}.`,
 						ephemeral: true,
@@ -71,8 +71,8 @@ module.exports = {
 			case 'remove':
 				try {
 					const caseID = options.getNumber('id') - 1
-					await warningsData.removeWarning(caseID, user.id)
-					await warningsData.updateWarnings(user.id)
+					await warningsData.removeWarning(guildId, caseID, user.id)
+					await warningsData.updateWarnings(guildId, user.id)
 					await interaction.reply({
 						content: `Case: ${caseID + 1} successfully removed from ${user.tag}`,
 						ephemeral: true,
@@ -86,7 +86,7 @@ module.exports = {
 				break
 			case 'check':
 				try {
-					const userWarnings = await warningsData.getWarnings(user.id)
+					const userWarnings = await warningsData.getWarnings(guildId, user.id)
 
 					if (userWarnings.length === 0) {
 						const embed = new EmbedBuilder()
@@ -127,7 +127,7 @@ module.exports = {
 				break
 			case 'clear':
 				try {
-					await warningsData.clearWarnings(user.id)
+					await warningsData.clearWarnings(guildId, user.id)
 					await interaction.reply({
 						content: `Successfully cleared all warnings for ${user.tag}.`,
 						ephemeral: true,
