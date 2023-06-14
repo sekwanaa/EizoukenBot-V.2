@@ -49,7 +49,7 @@ module.exports = {
 		const { options, guildId } = interaction
 		const user = options.getUser('user')
 		const subcommand = options.getSubcommand()
-		const userWarnings = await warningsData.getWarnings(user.id)
+		const userWarnings = await warningsData.getWarnings(guildId, user.id)
 
 		switch (subcommand) {
 			case 'add':
