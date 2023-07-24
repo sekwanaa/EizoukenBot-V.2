@@ -22,4 +22,5 @@ module.exports = {
 	warnings: getCollectionFn('warnings'),
 	logs: getCollectionFn('logs'),
 	tallyBoard: getCollectionFn('tallyBoard'),
+	reminders: getCollectionFn('reminders'),
 }
