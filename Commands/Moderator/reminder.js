@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js')
+const reminderData = require('../../data/reminderData.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -61,43 +62,36 @@ module.exports = {
 		const minute = options.getInteger('minute')
 		const date = new Date(year, month, dayOfMonth).toLocaleDateString()
 
-		const mongoCollections = require('../../config/mongoCollections.js')
-		const reminders = mongoCollections.reminders
-		const remindersCollections = await reminders()
-
 		switch (subcommands) {
 			case 'create':
-				try {
-					let reminderObj = {
-						title: title,
-						description: description,
-						date: date,
-						year: year,
-						month: month,
-						day: dayOfMonth,
-						hour: hour,
-						minute: minute,
-					}
-					await remindersCollections.insertOne(reminderObj)
+				const createWarning = await reminderData.createReminder(
+					title,
+					description,
+					date,
+					year,
+					month,
+					dayOfMonth,
+					hour,
+					minute
+				)
 
-					//TODO need to be able to reload the scheduled reminder for the discord bot
-
-					return interaction.reply({
-						content: `Your reminder has been successfully created`,
-						ephemeral: true,
-					})
-				} catch (e) {
-					console.log(e)
+				if (createWarning !== 'success') {
 					return interaction.reply({
 						content: `There was an issue creating your reminder. Please try again later.`,
 						ephemeral: true,
 					})
 				}
+				//TODO need to be able to reload the scheduled reminder for the discord bot
+
+				return interaction.reply({
+					content: `Your reminder has been successfully created`,
+					ephemeral: true,
+				})
 			case 'list':
 				try {
-					const reminders = await remindersCollections.find({}).toArray()
+					const reminders = await reminderData.getReminders()
 
-					if (reminders.length == 0) {
+					if (reminders.remindersArr.length == 0) {
 						const errorEmbed = new EmbedBuilder()
 							.setDescription('Sorry, there are no reminders.')
 							.setColor('Red')
@@ -105,14 +99,10 @@ module.exports = {
 						return interaction.reply({ embeds: [errorEmbed], ephemeral: true })
 					}
 
-					let message = ''
-
-					reminders.forEach(
-						(reminder, index) =>
-							(message += `**ID: ${index}**\`\`\`\nTitle: ${reminder.title}\nDescription: ${reminder.description}\n\Year: ${reminder.year}\nMonth: ${reminder.month}\nDay: ${reminder.day}\nHour: ${reminder.hour}\nMinute: ${reminder.minute}\`\`\`\n`)
-					)
-
-					const embed = new EmbedBuilder().setDescription(message)
+					const embed = new EmbedBuilder()
+						.setTitle('Reminder List')
+						.setDescription(reminders.message)
+						.setColor('Random')
 
 					return interaction.reply({ embeds: [embed], ephemeral: true })
 				} catch (e) {
@@ -125,26 +115,26 @@ module.exports = {
 			case 'update':
 				break
 			case 'purge':
-				try {
-					const currentDate = new Date().toLocaleDateString()
+				const purgeReminders = await reminderData.purgeReminders()
 
-					const reminders = await remindersCollections
-						.find({ date: { $lte: currentDate } })
-						.toArray()
-
-					await remindersCollections.deleteMany({ date: { $lte: currentDate } })
-
-					return interaction.reply({
-						content: `Successfully purged ${reminders.length} reminders`,
-						ephemeral: true,
-					})
-				} catch (e) {
-					console.log(e)
+				if (purgeReminders == 'error') {
 					return interaction.reply({
 						content: 'There was an error purging reminders before today.',
 						ephemeral: true,
 					})
 				}
+
+				if (purgeReminders.length == 0) {
+					return interaction.reply({
+						content: `There are no reminders to purge`,
+						ephemeral: true,
+					})
+				}
+
+				return interaction.reply({
+					content: `Successfully purged ${purgeReminders.length} reminders`,
+					ephemeral: true,
+				})
 		}
 	},
 }
