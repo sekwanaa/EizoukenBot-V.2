@@ -54,11 +54,12 @@ module.exports = {
 		const subcommands = options.getSubcommand()
 		const title = options.getString('title')
 		const description = options.getString('description')
-		const year = options.getInteger('year')
-		const month = options.getInteger('month')
-		const day = options.getInteger('day')
+		const year = options.getInteger('year') || new Date().getFullYear()
+		const month = options.getInteger('month') || new Date().getMonth()
+		const dayOfMonth = options.getInteger('day') || new Date().getDate()
 		const hour = options.getInteger('hour')
 		const minute = options.getInteger('minute')
+		const date = new Date(year, month, dayOfMonth).toLocaleDateString()
 
 		const mongoCollections = require('../../config/mongoCollections.js')
 		const reminders = mongoCollections.reminders
@@ -70,13 +71,16 @@ module.exports = {
 					let reminderObj = {
 						title: title,
 						description: description,
-						year: year || new Date().getFullYear(),
-						month: month || new Date().getMonth(),
-						day: day || new Date().getDay(),
+						date: date,
+						year: year,
+						month: month,
+						day: dayOfMonth,
 						hour: hour,
 						minute: minute,
 					}
 					await remindersCollections.insertOne(reminderObj)
+
+					//TODO need to be able to reload the scheduled reminder for the discord bot
 
 					return interaction.reply({
 						content: `Your reminder has been successfully created`,
@@ -84,6 +88,10 @@ module.exports = {
 					})
 				} catch (e) {
 					console.log(e)
+					return interaction.reply({
+						content: `There was an issue creating your reminder. Please try again later.`,
+						ephemeral: true,
+					})
 				}
 			case 'list':
 				try {
@@ -109,6 +117,33 @@ module.exports = {
 					return interaction.reply({ embeds: [embed], ephemeral: true })
 				} catch (e) {
 					console.log(e)
+					return interaction.reply({
+						content: `Sorry, there was an issue fetching reminders from the datebase, please try again later`,
+						ephemeral: true,
+					})
+				}
+			case 'update':
+				break
+			case 'purge':
+				try {
+					const currentDate = new Date().toLocaleDateString()
+
+					const reminders = await remindersCollections
+						.find({ date: { $lte: currentDate } })
+						.toArray()
+
+					await remindersCollections.deleteMany({ date: { $lte: currentDate } })
+
+					return interaction.reply({
+						content: `Successfully purged ${reminders.length} reminders`,
+						ephemeral: true,
+					})
+				} catch (e) {
+					console.log(e)
+					return interaction.reply({
+						content: 'There was an error purging reminders before today.',
+						ephemeral: true,
+					})
 				}
 		}
 	},
