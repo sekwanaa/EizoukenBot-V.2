@@ -4,6 +4,7 @@ const schedule = require('node-schedule')
 const reminderData = require('../data/reminderData')
 
 async function loadReminders(client) {
+	console.log(client)
 	const remindersCollections = await reminders()
 	const currentDay = new Date().toLocaleDateString()
 
@@ -13,7 +14,11 @@ async function loadReminders(client) {
 			.toArray()
 
 		for (const reminder of scheduledReminders) {
-			const { title, description, year, month, channel, day, hour, minute } = reminder
+			const { guildId, title, description, year, month, channel, day, hour, minute } = reminder
+
+			const msgChannel = client.channels.cache.get(channel)
+
+			if (msgChannel.guildId !== guildId) continue
 
 			let scheduledReminder = new schedule.RecurrenceRule()
 			scheduledReminder.year = year
@@ -23,7 +28,7 @@ async function loadReminders(client) {
 			scheduledReminder.minute = minute
 
 			const job = schedule.scheduleJob(scheduledReminder, function () {
-				reminderData.scheduledMessage(title, description, channel, client)
+				reminderData.scheduledMessage(title, description, msgChannel, client)
 			})
 		}
 
