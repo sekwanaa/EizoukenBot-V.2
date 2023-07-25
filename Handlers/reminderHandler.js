@@ -4,7 +4,6 @@ const schedule = require('node-schedule')
 const reminderData = require('../data/reminderData')
 
 async function loadReminders(client) {
-	console.log(client)
 	const remindersCollections = await reminders()
 	const currentDay = new Date().toLocaleDateString()
 
