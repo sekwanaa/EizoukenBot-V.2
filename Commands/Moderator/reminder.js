@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js')
 const reminderData = require('../../data/reminderData.js')
+let schedule = require('node-schedule')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,6 +25,12 @@ module.exports = {
 				)
 				.addIntegerOption(option =>
 					option.setName('minute').setDescription('Set the reminder minute. 0-60').setRequired(true)
+				)
+				.addChannelOption(option =>
+					option
+						.setName('channel')
+						.setDescription('Channel to send notification to')
+						.setRequired(false)
 				)
 				.addIntegerOption(option =>
 					option.setName('day').setDescription('Set the reminder day. 0-31').setRequired(false)
@@ -50,8 +57,8 @@ module.exports = {
 			subcommand.setName('purge').setDescription('Purge all reminders that have been fulfilled')
 		),
 
-	async execute(interaction) {
-		const { options } = interaction
+	async execute(interaction, client) {
+		const { options, guildId } = interaction
 		const subcommands = options.getSubcommand()
 		const title = options.getString('title')
 		const description = options.getString('description')
@@ -62,9 +69,26 @@ module.exports = {
 		const minute = options.getInteger('minute')
 		const date = new Date(year, month, dayOfMonth).toLocaleDateString()
 
+		const channel = options.getChannel('channel') || interaction.channel.id
+
 		switch (subcommands) {
 			case 'create':
+				//TODO need to be able to reload the scheduled reminder for the discord bot
+
+				let scheduledReminder = new schedule.RecurrenceRule()
+				scheduledReminder.year = year
+				scheduledReminder.month = month
+				scheduledReminder.date = dayOfMonth
+				scheduledReminder.hour = hour
+				scheduledReminder.minute = minute
+
+				const job = schedule.scheduleJob(scheduledReminder, function () {
+					reminderData.scheduledMessage(title, description, channel, client)
+				})
+
 				const createWarning = await reminderData.createReminder(
+					guildId,
+					channel,
 					title,
 					description,
 					date,
@@ -81,37 +105,28 @@ module.exports = {
 						ephemeral: true,
 					})
 				}
-				//TODO need to be able to reload the scheduled reminder for the discord bot
 
 				return interaction.reply({
 					content: `Your reminder has been successfully created`,
 					ephemeral: true,
 				})
 			case 'list':
-				try {
-					const reminders = await reminderData.getReminders()
+				const reminders = await reminderData.getReminders()
 
-					if (reminders.remindersArr.length == 0) {
-						const errorEmbed = new EmbedBuilder()
-							.setDescription('Sorry, there are no reminders.')
-							.setColor('Red')
+				if (reminders.remindersArr.length == 0) {
+					const errorEmbed = new EmbedBuilder()
+						.setDescription('Sorry, there are no reminders.')
+						.setColor('Red')
 
-						return interaction.reply({ embeds: [errorEmbed], ephemeral: true })
-					}
-
-					const embed = new EmbedBuilder()
-						.setTitle('Reminder List')
-						.setDescription(reminders.message)
-						.setColor('Random')
-
-					return interaction.reply({ embeds: [embed], ephemeral: true })
-				} catch (e) {
-					console.log(e)
-					return interaction.reply({
-						content: `Sorry, there was an issue fetching reminders from the datebase, please try again later`,
-						ephemeral: true,
-					})
+					return interaction.reply({ embeds: [errorEmbed], ephemeral: true })
 				}
+
+				const embed = new EmbedBuilder()
+					.setTitle('Reminder List')
+					.setDescription(reminders.message)
+					.setColor('Random')
+
+				return interaction.reply({ embeds: [embed], ephemeral: true })
 			case 'update':
 				break
 			case 'purge':

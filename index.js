@@ -50,6 +50,7 @@ client.distube = new DisTube(client, {
 
 client.commands = new Collection()
 client.cooldowns = new Collection()
+client.reminders = new Collection()
 
 logs(client, {
 	debug: true,
@@ -63,6 +64,9 @@ let scheduledAnnouncement = new schedule.RecurrenceRule()
 scheduledAnnouncement.date = [1, 28]
 scheduledAnnouncement.hour = 8
 scheduledAnnouncement.minute = 0
+
+const channel = '759030440475754497'
+// const channel = await client.channels.cache.get("759027798542385164"); //for testing
 
 const job = schedule.scheduleJob(scheduledAnnouncement, function () {
 	scheduleMessageCommand.scheduledMessage(client)
