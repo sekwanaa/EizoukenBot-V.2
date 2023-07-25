@@ -73,8 +73,6 @@ module.exports = {
 
 		switch (subcommands) {
 			case 'create':
-				//TODO need to be able to reload the scheduled reminder for the discord bot
-
 				let scheduledReminder = new schedule.RecurrenceRule()
 				scheduledReminder.year = year
 				scheduledReminder.month = month
@@ -121,6 +119,9 @@ module.exports = {
 					return interaction.reply({ embeds: [errorEmbed], ephemeral: true })
 				}
 
+				//TODO check if the reminder is for the correct guild to display
+				//* either check here or in the reminderData.js
+
 				const embed = new EmbedBuilder()
 					.setTitle('Reminder List')
 					.setDescription(reminders.message)
@@ -128,8 +129,10 @@ module.exports = {
 
 				return interaction.reply({ embeds: [embed], ephemeral: true })
 			case 'update':
+				//TODO update reminders based on case id.
 				break
 			case 'purge':
+				//TODO maybe make purging reminders automated
 				const purgeReminders = await reminderData.purgeReminders()
 
 				if (purgeReminders == 'error') {
