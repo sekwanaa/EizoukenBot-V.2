@@ -109,7 +109,7 @@ module.exports = {
 					ephemeral: true,
 				})
 			case 'list':
-				const reminders = await reminderData.getReminders()
+				const reminders = await reminderData.getReminders(guildId)
 
 				if (reminders.remindersArr.length == 0) {
 					const errorEmbed = new EmbedBuilder()
@@ -118,9 +118,6 @@ module.exports = {
 
 					return interaction.reply({ embeds: [errorEmbed], ephemeral: true })
 				}
-
-				//TODO check if the reminder is for the correct guild to display
-				//* either check here or in the reminderData.js
 
 				const embed = new EmbedBuilder()
 					.setTitle('Reminder List')

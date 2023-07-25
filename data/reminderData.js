@@ -2,11 +2,11 @@ const mongoCollections = require('../config/mongoCollections')
 const { EmbedBuilder } = require('discord.js')
 
 let exportedMethods = {
-	async getReminders() {
+	async getReminders(guildId) {
 		const reminders = mongoCollections.reminders
 		const remindersCollections = await reminders()
 
-		const remindersArr = await remindersCollections.find({}).toArray()
+		const remindersArr = await remindersCollections.find({ guildId: guildId }).toArray()
 		let message = ''
 
 		remindersArr.forEach(
