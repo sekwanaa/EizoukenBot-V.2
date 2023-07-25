@@ -18,6 +18,7 @@ const autoProfilePicChangeCommand = require('./tools/Automation/autoProfilePicCh
 const { loadEvents } = require('./Handlers/eventHandler')
 const { loadCommands } = require('./Handlers/commandHandler')
 const { handleLogs } = require('./Handlers/logHandler')
+const { loadReminders } = require('./Handlers/reminderHandler')
 const prefix = '?'
 
 const client = new Client({
@@ -50,7 +51,6 @@ client.distube = new DisTube(client, {
 
 client.commands = new Collection()
 client.cooldowns = new Collection()
-client.reminders = new Collection()
 
 logs(client, {
 	debug: true,
@@ -91,5 +91,6 @@ const job2 = schedule.scheduleJob(autoProfilePicChange, function () {
 client.login(BOT_TOKEN).then(() => {
 	loadEvents(client)
 	loadCommands(client)
+	loadReminders(client)
 	handleLogs(client)
 })
