@@ -18,6 +18,7 @@ const autoProfilePicChangeCommand = require('./tools/Automation/autoProfilePicCh
 const { loadEvents } = require('./Handlers/eventHandler')
 const { loadCommands } = require('./Handlers/commandHandler')
 const { handleLogs } = require('./Handlers/logHandler')
+const { loadReminders } = require('./Handlers/reminderHandler')
 const prefix = '?'
 
 const client = new Client({
@@ -64,6 +65,9 @@ scheduledAnnouncement.date = [1, 28]
 scheduledAnnouncement.hour = 8
 scheduledAnnouncement.minute = 0
 
+const channel = '759030440475754497'
+// const channel = await client.channels.cache.get("759027798542385164"); //for testing
+
 const job = schedule.scheduleJob(scheduledAnnouncement, function () {
 	scheduleMessageCommand.scheduledMessage(client)
 })
@@ -87,5 +91,6 @@ const job2 = schedule.scheduleJob(autoProfilePicChange, function () {
 client.login(BOT_TOKEN).then(() => {
 	loadEvents(client)
 	loadCommands(client)
+	loadReminders(client)
 	handleLogs(client)
 })
