@@ -4,7 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('compliment')
 		.setDescription('Compliment someone with something nice...?')
-		.addRoleOption(option =>
+		.addUserOption(option =>
 			option
 				.setName('target')
 				.setDescription('who would you like to send the compliment to?')
