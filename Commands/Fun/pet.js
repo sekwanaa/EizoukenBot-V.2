@@ -5,7 +5,9 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('pet')
 		.setDescription('Spread some love, pet someone')
-		.addUserOption(option => option.setName('target').setDescription('Who would you like to pet?')),
+		.addUserOption(option =>
+			option.setName('target').setDescription('Who would you like to pet?').setRequired(true)
+		),
 
 	async execute(interaction) {
 		const { options } = interaction
