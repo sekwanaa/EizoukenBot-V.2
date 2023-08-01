@@ -19,7 +19,7 @@ module.exports = {
 
 	async execute(interaction) {
 		const { options } = interaction
-		const target = options.getRole('target')
+		const target = options.getUser('target')
 		const compliment = options.getString('compliment')
 
 		interaction.reply({ content: `${target}, ${compliment}` })

@@ -8,7 +8,7 @@ module.exports = {
 
 	async execute(interaction) {
 		const { options } = interaction
-		const target = options.getRole('target')
+		const target = options.getUser('target')
 
 		const embed = new EmbedBuilder().setDescription(`${target} UwU you make my heart go nyan~~`)
 
