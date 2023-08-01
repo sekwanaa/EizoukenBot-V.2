@@ -40,6 +40,19 @@
 
 		],
 		"description": "discord client event builder"
+	},
+	"Discord Data": {
+		"scope": "javascript",
+		"prefix": "ddata",
+		"body": [
+			"const mongoCollection = require('../config/mongoCollection')",
+			"\n\nlet exportedMethods = {",
+			"\tasync $1($2) {",
+			"\t\t$0",
+			"\t}",
+			"};",
+			"\nmodule.exports = exportedMethods"
+		]
 	}
 	
 }

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js')
+const responseData = require('../../data/automatedResponsesData')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,8 +14,8 @@ module.exports = {
 		.addStringOption(option =>
 			option
 				.setName('compliment')
-				.setDescription('What woud you like to say to them?')
-				.setRequired(true)
+				.setDescription('What would you like to say to them?')
+				.setRequired(false)
 		),
 
 	async execute(interaction) {
@@ -22,6 +23,17 @@ module.exports = {
 		const target = options.getUser('target')
 		const compliment = options.getString('compliment')
 
-		interaction.reply({ content: `${target}, ${compliment}` })
+		try {
+			const responses = await responseData.getResponses()
+			const num = Math.floor(Math.random() * (responses.length - 1) + 1)
+
+			if (compliment) {
+				interaction.reply({ content: `${target}, ${compliment}` })
+			} else {
+				interaction.reply({ content: `${target}, ${responses[num].message}` })
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	},
 }

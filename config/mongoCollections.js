@@ -23,4 +23,5 @@ module.exports = {
 	logs: getCollectionFn('logs'),
 	tallyBoard: getCollectionFn('tallyBoard'),
 	reminders: getCollectionFn('reminders'),
+	automated_responses: getCollectionFn('automated_responses'),
 }

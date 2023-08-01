@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
+const responseData = require('../../data/automatedResponsesData')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,8 +11,15 @@ module.exports = {
 		const { options } = interaction
 		const target = options.getUser('target')
 
-		const embed = new EmbedBuilder().setDescription(`${target} UwU you make my heart go nyan~~`)
+		try {
+			const responses = await responseData.getResponses()
+			const num = Math.floor(Math.random() * (responses.length - 1) + 1)
 
-		interaction.reply({ embeds: [embed] })
+			const embed = new EmbedBuilder().setDescription(`${target} ${responses[num]?.message}`)
+
+			interaction.reply({ embeds: [embed] })
+		} catch (error) {
+			console.log(error)
+		}
 	},
 }
