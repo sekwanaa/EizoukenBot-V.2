@@ -7,11 +7,13 @@ let exportedMethods = {
 		const remindersCollections = await reminders()
 
 		const remindersArr = await remindersCollections.find({ guildId: guildId }).toArray()
+		if (remindersArr.length == 0) return null
+
 		let message = ''
 
 		remindersArr.forEach(
-			(reminder, index) =>
-				(message += `**ID: ${index}**\`\`\`\n\
+			reminder =>
+				(message += `**ID: ${reminder.caseId}**\`\`\`\n\
 Title: ${reminder.title}\n\
 Description: ${reminder.description}\n\
 Year: ${reminder.year}\n\
@@ -25,6 +27,7 @@ Minute: ${reminder.minute}\`\`\`\n`)
 	async createReminder(
 		guildId,
 		channel,
+		caseId,
 		title,
 		description,
 		date,
@@ -41,6 +44,7 @@ Minute: ${reminder.minute}\`\`\`\n`)
 			let reminderObj = {
 				guildId: guildId,
 				channel: channel,
+				caseId: caseId,
 				title: title,
 				description: description,
 				date: date,
@@ -75,9 +79,36 @@ Minute: ${reminder.minute}\`\`\`\n`)
 			return 'error'
 		}
 	},
-	async updateWarnings() {
+	async updateReminders(guildId, caseId, title, description) {
 		const reminders = mongoCollections.reminders
 		const remindersCollections = await reminders()
+
+		if (!(title && description)) {
+			if (title) {
+				remindersCollections.findOneAndUpdate(
+					{ guildId: guildId, caseId: caseId },
+					{ $set: { title: title } }
+				)
+
+				return 'Title has been updated successfully'
+			} else if (description) {
+				remindersCollections.findOneAndUpdate(
+					{ guildId: guildId, caseId: caseId },
+					{ $set: { description: description } }
+				)
+
+				return 'Description has been updated successfully'
+			} else {
+				return 'Please include either a title or description to update'
+			}
+		} else {
+			remindersCollections.findOneAndUpdate(
+				{ guildId: guildId, caseId: caseId },
+				{ $set: { title: title, description: description } }
+			)
+
+			return 'Title and description have been updated successfully'
+		}
 	},
 	async scheduledMessage(title, message, channel, client) {
 		const msgChannel = client.channels.cache.get(channel)

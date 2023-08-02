@@ -52,6 +52,12 @@ module.exports = {
 				.addIntegerOption(option =>
 					option.setName('id').setDescription('Select a reminder ID').setRequired(true)
 				)
+				.addStringOption(option =>
+					option.setName('new-title').setDescription('new title').setRequired(false)
+				)
+				.addStringOption(option =>
+					option.setName('new-description').setDescription('new description').setRequired(false)
+				)
 		)
 		.addSubcommand(subcommand =>
 			subcommand.setName('purge').setDescription('Purge all reminders that have been fulfilled')
@@ -70,6 +76,7 @@ module.exports = {
 		const date = new Date(year, month, dayOfMonth).toLocaleDateString()
 
 		const channel = options.getChannel('channel') || interaction.channel.id
+		let caseId
 
 		switch (subcommands) {
 			case 'create':
@@ -84,9 +91,17 @@ module.exports = {
 					reminderData.scheduledMessage(title, description, channel, client)
 				})
 
+				try {
+					var remindersArr = await reminderData.getReminders(guildId)
+				} catch (error) {
+					console.log(error)
+				}
+				caseId = remindersArr?.remindersArr?.length + 1 || 0
+
 				const createWarning = await reminderData.createReminder(
 					guildId,
 					channel,
+					caseId,
 					title,
 					description,
 					date,
@@ -126,8 +141,21 @@ module.exports = {
 
 				return interaction.reply({ embeds: [embed], ephemeral: true })
 			case 'update':
-				//TODO update reminders based on case id.
-				break
+				caseId = options.getInteger('id')
+				const newTitle = options.getString('new-title')
+				const newDescription = options.getString('new-description')
+
+				try {
+					await reminderData.updateReminders(guildId, caseId, newTitle, newDescription)
+				} catch (e) {
+					console.log(e)
+				}
+
+				const updateEmbed = new EmbedBuilder().setDescription(
+					`Successfully updated title to ${newTitle} and description to ${newDescription}`
+				)
+
+				return interaction.reply({ embeds: [updateEmbed], ephemeral: true })
 			case 'purge':
 				//TODO maybe make purging reminders automated
 				const purgeReminders = await reminderData.purgeReminders()
