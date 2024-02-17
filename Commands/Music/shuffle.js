@@ -2,9 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
 const client = require('../../index')
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('loop')
-		.setDescription('Loop current song or current queue'),
+	data: new SlashCommandBuilder().setName('shuffle').setDescription('Shuffles current playlist'),
 
 	async execute(interaction) {
 		try {
