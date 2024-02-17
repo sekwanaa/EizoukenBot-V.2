@@ -9,7 +9,10 @@ module.exports = {
 			const queue = client.player.getQueue(interaction.guildId)
 
 			if (!queue) {
-				return await interaction.editReply('There are no songs in the queue.')
+				return await interaction.reply({
+					content: 'There are no songs in the queue.',
+					ephemeral: true,
+				})
 			}
 
 			queue.shuffle()
