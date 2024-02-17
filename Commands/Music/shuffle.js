@@ -6,7 +6,9 @@ module.exports = {
 
 	async execute(interaction) {
 		try {
-			const queue = client.player.getQueue(interaction.guildId)
+			const { member } = interaction
+			const voiceChannel = member.voice.channel
+			const queue = await client.distube.getQueue(voiceChannel)
 
 			if (!queue) {
 				return await interaction.reply({
