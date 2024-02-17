@@ -6,7 +6,7 @@ module.exports = {
 		.setName('loop')
 		.setDescription('Loop current song or current queue'),
 
-	async execute(client, interaction) {
+	async execute(interaction) {
 		try {
 			const queue = client.player.getQueue(interaction.guildId)
 
