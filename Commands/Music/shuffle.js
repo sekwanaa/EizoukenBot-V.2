@@ -17,7 +17,7 @@ module.exports = {
 
 			queue.shuffle()
 			await interaction.reply({
-				content: 'The queue has been successfully shuffled!',
+				content: `The queue of ${queue.tracks.length} songs have been shuffled!`,
 				ephemeral: true,
 			})
 		} catch (error) {
