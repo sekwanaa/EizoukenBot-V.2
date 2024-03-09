@@ -9,7 +9,7 @@ const {
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('button-role')
-		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles)
 		.setDescription(`Complete button role commands`)
 		.addSubcommand(subcommand =>
 			subcommand
@@ -54,25 +54,32 @@ module.exports = {
 	async execute(interaction) {
 		const { options } = interaction
 		const subcommand = options.getSubcommand()
+		try {
+			switch (subcommand) {
+				case 'create':
+					const label = options.getString(`label`)
+					const customId = options.getRole(`role`)
+					const buttonType = options.getString(`type`)
 
-		switch (subcommand) {
-			case 'create':
-				const label = options.getString(`label`)
-				const customId = options.getRole(`role`)
-				const buttonType = options.getString(`type`)
+					const button = new ButtonBuilder()
+						.setCustomId(customId.id)
+						.setLabel(label)
+						.setStyle(buttonType || ButtonStyle.Success)
 
-				const button = new ButtonBuilder()
-					.setCustomId(customId.id)
-					.setLabel(label)
-					.setStyle(buttonType || ButtonStyle.Success)
+					const actionRow = new ActionRowBuilder().addComponents(button)
 
-				const actionRow = new ActionRowBuilder().addComponents(button)
+					await interaction.channel.send({ components: [actionRow] })
 
-				await interaction.channel.send({ components: [actionRow] })
-
-				break
-			case 'remove':
-				break
+					break
+				case 'remove':
+					break
+			}
+		} catch (error) {
+			console.log(error)
+			interaction.reply({
+				content: "You don't have Manage Guild privileges, so you can't use this command.",
+				ephemeral: true,
+			})
 		}
 	},
 }
