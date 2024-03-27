@@ -18,6 +18,13 @@ module.exports = {
 		const res = new EmbedBuilder().setColor(0x5fb041)
 
 		if (amount) {
+			if (amount >= 100) {
+				return interaction.reply({
+					content: 'The maximum amount of messages I can delete is 99.',
+					ephemeral: true,
+				})
+			}
+
 			const messages = await channel.messages.fetch({ limit: amount + 1 })
 			let i = 0
 			const filteredMessages = []
@@ -53,7 +60,10 @@ module.exports = {
 					interaction.reply({ embeds: [res] })
 				})
 			} catch {
-				interaction.reply({ content: 'Sorry there was an issue completing your request.' })
+				interaction.reply({
+					content: 'Sorry there was an issue completing your request.',
+					ephemeral: true,
+				})
 			}
 		}
 	},

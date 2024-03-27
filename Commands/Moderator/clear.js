@@ -30,6 +30,13 @@ module.exports = {
 			let i = 0
 			const filteredMessages = []
 
+			if (amount >= 100) {
+				interaction.reply({
+					content: 'The maximum amount of messages I can delete is 99.',
+					ephemeral: true,
+				})
+			}
+
 			messages.filter(msg => {
 				if (msg.author.id == target.id && amount > i) {
 					filteredMessages.push(msg)
