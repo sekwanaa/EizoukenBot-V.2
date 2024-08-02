@@ -22,6 +22,15 @@ function loadEvents(client) {
 				} else {
 					client.on(event.name, (...args) => event.execute(...args, client))
 				}
+
+				// Handle distube events
+				if (client.distube && client.distube[event.name]) {
+					if (event.once) {
+						client.distube.once(event.name, (...args) => event.execute(...args, client))
+					} else {
+						client.distube.on(event.name, (...args) => event.execute(...args, client))
+					}
+				}
 			}
 			table.addRow(file, 'loaded')
 			continue

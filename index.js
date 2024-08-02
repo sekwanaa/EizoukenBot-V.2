@@ -12,6 +12,7 @@ const {
 const logs = require('discord-logs')
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
+const ffmpegPath = require('ffmpeg-static')
 const schedule = require('node-schedule')
 const scheduleMessageCommand = require('./tools/Automation/scheduledMessage')
 const autoProfilePicChangeCommand = require('./tools/Automation/autoProfilePicChange')
@@ -42,11 +43,13 @@ const client = new Client({
 	],
 })
 
+console.log('FFmpeg path:', ffmpegPath)
+
 client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
-	leaveOnFinish: false,
 	emitAddSongWhenCreatingQueue: false,
 	plugins: [new SpotifyPlugin()],
+	ffmpeg: ffmpegPath,
 })
 
 client.commands = new Collection()
