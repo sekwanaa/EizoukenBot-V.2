@@ -49,7 +49,6 @@ client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
 	emitAddSongWhenCreatingQueue: false,
 	plugins: [new SpotifyPlugin()],
-	ffmpeg: ffmpegPath,
 })
 
 client.commands = new Collection()
