@@ -20,19 +20,19 @@ module.exports = {
     }
     const queue = await client.distube.getQueue(voiceChannel);
     try {
-      if (!queue) {
-        embed.setColor("Red").setDescription("Sorry, there is no queue");
-        return interaction.reply({ embeds: [embed], ephemeral: true });
-      }
-      await queue.stop(voiceChannel);
-      embed.setColor("Red").setDescription("Stopped playing songs!");
-      return interaction.reply({ embeds: [embed], ephemeral: true });
-    } catch (error) {
-      console.log(error);
-      interaction.reply({
-        content: "sorry something went wrong with your request",
-        ephermeral: true,
-      });
-    }
+			if (!queue) {
+				embed.setColor('Red').setDescription('Sorry, there is no queue')
+				return interaction.reply({ embeds: [embed], ephemeral: true })
+			}
+			await queue.stop(voiceChannel)
+			embed.setColor('Red').setDescription('Stopped playing songs!')
+			return interaction.reply({ embeds: [embed], ephemeral: true })
+		} catch (error) {
+			console.log(error)
+			interaction.reply({
+				content: 'sorry something went wrong with your request',
+				ephermeral: true,
+			})
+		}
   },
 };

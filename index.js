@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { BOT_TOKEN } = process.env
+const { BOT_TOKEN, SPOTIFY_CLIENT_ID, SPOTIFY_SECRET } = process.env
 const {
 	Client,
 	GatewayIntentBits,
@@ -12,6 +12,8 @@ const {
 const logs = require('discord-logs')
 const { DisTube } = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
+const { YtDlpPlugin } = require('@distube/yt-dlp')
+const { YouTubePlugin } = require('@distube/youtube')
 const ffmpegPath = require('ffmpeg-static')
 const schedule = require('node-schedule')
 const scheduleMessageCommand = require('./tools/Automation/scheduledMessage')
@@ -43,12 +45,22 @@ const client = new Client({
 	],
 })
 
-console.log('FFmpeg path:', ffmpegPath)
-
 client.distube = new DisTube(client, {
 	emitNewSongOnly: true,
 	emitAddSongWhenCreatingQueue: false,
-	plugins: [new SpotifyPlugin()],
+	plugins: [
+		new SpotifyPlugin({
+			api: {
+				clientId: SPOTIFY_CLIENT_ID,
+				clientSecret: SPOTIFY_SECRET,
+			},
+		}),
+		new YtDlpPlugin({ update: true }),
+		new YouTubePlugin(),
+	],
+	ffmpeg: {
+		path: ffmpegPath,
+	},
 })
 
 client.commands = new Collection()
