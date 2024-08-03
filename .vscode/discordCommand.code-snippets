@@ -28,6 +28,18 @@
 		],
 		"description": "discord command builder"
 	},
+	"Discord Context Command": {
+		"scope": "javascript",
+		"prefix": "dctxt",
+		"body": [
+			"const { ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder } = require('discord.js');\n",
+			"module.exports = {\n",
+			"\tdata: new ContextMenuCommandBuilder()\n\t.setName('$1').setType(ApplicationCommandType.$2),\n",
+			"\tasync execute(interaction) {\n\t\tconst target = interaction.targetUser\n\t\t$0\n\t},",
+			"};"
+		],
+		"description": "discord context command builder"
+	},
 	"Discord Event": {
 		"scope": "javascript",
 		"prefix": "devt",
