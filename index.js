@@ -55,8 +55,8 @@ client.distube = new DisTube(client, {
 				clientSecret: SPOTIFY_SECRET,
 			},
 		}),
-		new YtDlpPlugin({ update: true }),
 		new YouTubePlugin(),
+		new YtDlpPlugin({ update: true }),
 	],
 	ffmpeg: {
 		path: ffmpegPath,
