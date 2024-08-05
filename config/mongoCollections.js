@@ -24,4 +24,5 @@ module.exports = {
 	tallyBoard: getCollectionFn('tallyBoard'),
 	reminders: getCollectionFn('reminders'),
 	automated_responses: getCollectionFn('automated_responses'),
+	moderators: getCollectionFn('moderators'),
 }
